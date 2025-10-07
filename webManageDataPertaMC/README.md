@@ -336,4 +336,3 @@ For support and questions regarding this project, please contact the development
 
 ---
 
-**Developed with ❤️ for Perta MC** | **Powered by Laravel 11.x**
