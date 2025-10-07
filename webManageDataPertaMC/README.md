@@ -1,61 +1,339 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Web Management Data Perta MC
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A comprehensive Laravel-based web application for managing project data, tools, documents, and request workflows at Perta MC. This system streamlines the process of handling project tools, document assignments, and approval workflows.
 
-## About Laravel
+## 🚀 Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### Core Functionality
+- **Project Management**: Create and manage projects with unique I/O numbers
+- **Tool Management**: Add, edit, and track tools with detailed specifications
+- **Document Assignment**: Bulk and individual assignment of tools to documents
+- **Request Workflow**: Multi-stage approval process with status tracking
+- **User Authentication**: Secure login system with role-based access
+- **Search & Filter**: Advanced filtering by document, status, and keywords
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Key Modules
+1. **Projects Module**
+   - Project creation with title and I/O number
+   - Project-specific tool management
+   - Comprehensive project overview
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+2. **Tools Management**
+   - Detailed tool specifications (description, quantity, unit, GL code)
+   - Delivery date tracking
+   - Bulk operations support
+   - Advanced search and filtering
 
-## Learning Laravel
+3. **Document Management**
+   - Document creation and assignment
+   - Multi-stage workflow tracking
+   - Status monitoring and updates
+   - Progress percentage calculation
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+4. **Request System**
+   - Request creation and processing
+   - Status tracking (pending, approved, rejected, etc.)
+   - Approval workflow management
+   - Request history and audit trail
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+5. **Bidang (GL Code) Management**
+   - GL code categorization
+   - Financial tracking integration
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 🛠️ Technology Stack
 
-## Laravel Sponsors
+### Backend
+- **Framework**: Laravel 11.x
+- **Database**: MySQL
+- **Authentication**: Laravel Breeze
+- **Testing**: Pest PHP
+- **Code Quality**: PHP CS Fixer (Pint)
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Frontend
+- **CSS Framework**: Tailwind CSS
+- **Build Tool**: Vite
+- **JavaScript**: Vanilla JS with modern ES6+ features
+- **Icons**: Heroicons (SVG)
 
-### Premium Partners
+### Development Tools
+- **Package Manager**: Composer (PHP), NPM (JavaScript)
+- **Version Control**: Git
+- **Local Development**: Laragon/XAMPP compatible
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## 📋 Installation
 
-## Contributing
+### Prerequisites
+- PHP >= 8.2
+- Composer
+- Node.js & NPM
+- MySQL/MariaDB
+- Web server (Apache/Nginx)
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Setup Instructions
 
-## Code of Conduct
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/YanStephen29/MagangPertaMC.git
+   cd webManageDataPertaMC
+   ```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+2. **Install PHP dependencies**
+   ```bash
+   composer install
+   ```
 
-## Security Vulnerabilities
+3. **Install JavaScript dependencies**
+   ```bash
+   npm install
+   ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+4. **Environment configuration**
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
 
-## License
+5. **Database setup**
+   - Create a MySQL database
+   - Update `.env` file with database credentials:
+     ```env
+     DB_CONNECTION=mysql
+     DB_HOST=127.0.0.1
+     DB_PORT=3306
+     DB_DATABASE=your_database_name
+     DB_USERNAME=your_username
+     DB_PASSWORD=your_password
+     ```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+6. **Run migrations and seeders**
+   ```bash
+   php artisan migrate
+   php artisan db:seed
+   ```
+
+7. **Build assets**
+   ```bash
+   npm run build
+   # or for development
+   npm run dev
+   ```
+
+8. **Start the development server**
+   ```bash
+   php artisan serve
+   ```
+
+## 📖 Usage
+
+### Getting Started
+1. Register a new account or login with existing credentials
+2. Create your first project with a unique I/O number
+3. Add tools to your project with detailed specifications
+4. Create documents and assign tools to them
+5. Manage the approval workflow through the request system
+
+### Key Workflows
+
+#### Tool Management
+- Navigate to a project to view all associated tools
+- Use the "Add Request" button to create new tool entries
+- Use bulk assignment to assign multiple tools to documents
+- Filter and search tools using the advanced search functionality
+
+#### Document Assignment
+- **Individual Assignment**: Click "Assign Document" on unassigned tools
+- **Bulk Assignment**: 
+  1. Click "Assign to Document" to enter bulk mode
+  2. Select multiple tools using checkboxes
+  3. Choose a document from the dropdown
+  4. Confirm the bulk assignment
+
+#### Request Processing
+- Documents progress through multiple stages (Tahapan)
+- Each stage has specific requirements and approvals
+- Status colors indicate current progress:
+  - Gray: Unprocessed
+  - Blue: In Progress
+  - Green: Approved
+  - Red: Rejected
+
+### User Interface Features
+- **Responsive Design**: Works on desktop, tablet, and mobile devices
+- **Real-time Updates**: Status changes reflect immediately
+- **Intuitive Navigation**: Clear breadcrumbs and navigation paths
+- **Advanced Filtering**: Multi-criteria search and filter options
+- **Bulk Operations**: Efficient handling of multiple items
+
+## 🗄️ Database Schema
+
+### Main Tables
+- `projects`: Store project information and I/O numbers
+- `tools`: Tool specifications and quantities
+- `documents`: Document management and assignments
+- `requests`: Request workflow and approvals
+- `tahapans`: Workflow stages and progress tracking
+- `bidangs`: GL code categories and financial tracking
+- `users`: User authentication and profiles
+
+### Key Relationships
+- Projects → Tools (One-to-Many)
+- Tools → Documents (Many-to-One)
+- Documents → Requests (One-to-One)
+- Documents → Tahapans (One-to-Many)
+- Tools → Bidangs (Many-to-One)
+
+## 🛣️ API Endpoints
+
+### Main Routes
+- `GET /projects` - List all projects
+- `GET /projects/{project}/tools` - Project-specific tools
+- `POST /projects/{project}/tools` - Create new tool
+- `PATCH /projects/{project}/tools/bulk-assign` - Bulk tool assignment
+- `GET /documents` - Document management
+- `GET /bidangs` - GL code management
+
+## 💻 Development
+
+### Code Style
+The project follows Laravel best practices and PSR standards:
+- Use PHP CS Fixer (Pint) for code formatting: `./vendor/bin/pint`
+- Follow Laravel naming conventions
+- Write descriptive commit messages
+
+### Testing
+```bash
+# Run all tests
+php artisan test
+
+# Run specific test suite
+php artisan test --testsuite=Feature
+php artisan test --testsuite=Unit
+
+# Run tests with coverage
+php artisan test --coverage
+```
+
+### Contributing
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/new-feature`
+3. Make your changes and commit: `git commit -am 'Add new feature'`
+4. Push to the branch: `git push origin feature/new-feature`
+5. Submit a pull request
+
+## 📁 Project Structure
+
+```
+app/
+├── Http/Controllers/     # Application controllers
+├── Models/              # Eloquent models
+├── Providers/           # Service providers
+└── View/Components/     # Blade components
+
+database/
+├── migrations/          # Database migrations
+├── seeders/            # Database seeders
+└── factories/          # Model factories
+
+resources/
+├── views/              # Blade templates
+├── css/                # Stylesheets
+└── js/                 # JavaScript files
+
+routes/
+├── web.php             # Web routes
+├── auth.php            # Authentication routes
+└── console.php         # Console commands
+```
+
+## ⚙️ Configuration
+
+### Key Configuration Files
+- `config/app.php` - Application settings
+- `config/database.php` - Database configuration
+- `config/auth.php` - Authentication settings
+- `tailwind.config.js` - Tailwind CSS configuration
+- `vite.config.js` - Vite build configuration
+
+### Environment Variables
+```env
+APP_NAME="Web Management Data Perta MC"
+APP_ENV=local
+APP_DEBUG=true
+APP_URL=http://localhost
+
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=webmanage_pertamc
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+## 🔧 Troubleshooting
+
+### Common Issues
+
+1. **Migration Errors**
+   ```bash
+   php artisan migrate:refresh --seed
+   ```
+
+2. **Asset Build Issues**
+   ```bash
+   npm run build
+   php artisan optimize:clear
+   ```
+
+3. **Permission Issues**
+   ```bash
+   chmod -R 775 storage bootstrap/cache
+   ```
+
+4. **Cache Issues**
+   ```bash
+   php artisan cache:clear
+   php artisan config:clear
+   php artisan view:clear
+   ```
+
+## 📊 Project Statistics
+
+This project includes:
+- **188+ files** in the initial commit
+- **Comprehensive test suite** with Pest PHP
+- **Responsive design** supporting all device sizes
+- **Multi-language support ready** (ID/EN)
+- **Advanced security features** with Laravel Breeze
+
+## 🎯 Future Enhancements
+
+- [ ] API documentation with Swagger/OpenAPI
+- [ ] Real-time notifications with WebSockets
+- [ ] Advanced reporting and analytics
+- [ ] Mobile app integration
+- [ ] Enhanced file upload and management
+- [ ] Multi-tenant support
+
+## 📄 License
+
+This project is developed for Perta MC internal use. All rights reserved.
+
+## 🤝 Support
+
+For support and questions regarding this project, please contact the development team or create an issue in the repository.
+
+## 📈 Changelog
+
+### Version 1.0.0 (October 2025)
+- ✅ Initial release with core functionality
+- ✅ Project and tool management
+- ✅ Document assignment system
+- ✅ Request workflow implementation
+- ✅ User authentication and authorization
+- ✅ Responsive web interface
+- ✅ Database optimization and cleanup
+- ✅ Git repository setup with proper branching
+
+---
+
+**Developed with ❤️ for Perta MC** | **Powered by Laravel 11.x**
