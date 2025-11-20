@@ -5,14 +5,14 @@
                 <h2 class="font-semibold text-lg sm:text-xl text-gray-800 leading-tight">
                     Edit User
                 </h2>
-                <p class="text-sm text-gray-600 mt-1">Edit informasi dan privilege user: {{ $admin->username }}</p>
+                <p class="text-sm text-gray-600 mt-1">Edit Information and privilege user: {{ $admin->username }}</p>
             </div>
             <div class="mt-3 sm:mt-0">
                 <a href="{{ route('admin.management.index') }}" class="bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-4 rounded-md shadow-md transition-colors duration-200 inline-flex items-center text-sm">
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                     </svg>
-                    Kembali ke Daftar User
+                    Back to User List
                 </a>
             </div>
         </div>
@@ -30,7 +30,7 @@
                             <!-- Basic Info -->
                             <div class="space-y-6">
                                 <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                                    <h3 class="text-lg font-semibold text-blue-800 mb-4">📋 Informasi Dasar</h3>
+                                    <h3 class="text-lg font-semibold text-blue-800 mb-4">📋 Basic Information</h3>
                                     
                                     <div class="flex items-center mb-4">
                                         <div class="flex-shrink-0 h-12 w-12">
@@ -40,7 +40,7 @@
                                         </div>
                                         <div class="ml-3">
                                             <div class="text-sm text-gray-500">User ID: {{ $admin->admin_id }}</div>
-                                            <div class="text-xs text-gray-400">Dibuat: {{ $admin->created_at->format('d/m/Y H:i') }}</div>
+                                            <div class="text-xs text-gray-400">Created At: {{ $admin->created_at->format('d/m/Y H:i') }}</div>
                                         </div>
                                     </div>
                                     
@@ -58,7 +58,7 @@
 
                                     <div class="mt-4">
                                         <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
-                                            Password <span class="text-gray-500">(Kosongkan jika tidak ingin mengubah)</span>
+                                            Password <span class="text-gray-500">(Leave blank if you don't want to change)</span>
                                         </label>
                                         <input type="password" name="password" id="password" 
                                                class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 @error('password') border-red-500 @enderror"
@@ -66,7 +66,7 @@
                                         @error('password')
                                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                                         @enderror
-                                        <p class="text-xs text-gray-500 mt-1">Password harus 6-8 karakter atau kosongkan untuk tidak mengubah</p>
+                                        <p class="text-xs text-gray-500 mt-1">Password must be 6-8 characters or leave blank to keep unchanged</p>
                                     </div>
 
                                     <div class="mt-4">
@@ -94,13 +94,13 @@
                                     
                                     <div class="mb-4">
                                         <button type="button" onclick="loadRoleTemplate()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200">
-                                            Load Template untuk Role
+                                            Load Template for Role
                                         </button>
                                         <button type="button" onclick="selectAll()" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 ml-2">
-                                            Pilih Semua
+                                            Select All
                                         </button>
                                         <button type="button" onclick="clearAll()" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200 ml-2">
-                                            Hapus Semua
+                                            Clear All
                                         </button>
                                     </div>
 
@@ -170,8 +170,8 @@
                                     @error('privilege')
                                         <p class="text-red-500 text-xs mt-2">{{ $message }}</p>
                                     @enderror
-                                    
-                                    <p class="text-xs text-gray-500 mt-2">Pilih minimal 1 privilege</p>
+
+                                    <p class="text-xs text-gray-500 mt-2">Choose at least 1 privilege</p>
                                 </div>
                             </div>
                         </div>
@@ -180,10 +180,10 @@
                         <div class="flex justify-end mt-8">
                             <div class="flex gap-4">
                                 <a href="{{ route('admin.management.show', $admin) }}" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-md font-medium transition-colors duration-200">
-                                    Batal
+                                    Cancel
                                 </a>
                                 <button type="submit" class="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 py-2 rounded-md font-medium shadow-md transform hover:scale-105 transition-all duration-200">
-                                    💾 Update Admin
+                                    Update Admin
                                 </button>
                             </div>
                         </div>

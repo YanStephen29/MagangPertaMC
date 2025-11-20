@@ -23,8 +23,8 @@ class DetailController extends Controller
         $admin = Auth::guard('admin')->user();
         
         // Check if PM has access to this project
-        if ($admin->role === 'Project Manager' && $project->assigned_to !== $admin->username) {
-            return redirect()->route('projects.index')->with('error', 'Access denied to this project.');
+        if ($admin->role === 'Project Manager' && $project->assigned_to !== $admin->admin_id) {
+            return redirect()->route('projects.index')->with('error', 'This project is not assigned to you. You can only access BOQ for projects that are assigned to you.');
         }
         
         // Verify section belongs to this project's BOQ
@@ -52,8 +52,18 @@ class DetailController extends Controller
         $admin = Auth::guard('admin')->user();
         
         // Check if PM has access to this project
-        if ($admin->role === 'Project Manager' && $project->assigned_to !== $admin->username) {
-            return redirect()->route('projects.index')->with('error', 'Access denied to this project.');
+        if ($admin->role === 'Project Manager' && $project->assigned_to !== $admin->admin_id) {
+            return redirect()->route('projects.index')->with('error', 'This project is not assigned to you. You can only access BOQ for projects that are assigned to you.');
+        }
+        
+        // Check if PM can manage BOQ for this project
+        if (!$admin->canManageBoq($project)) {
+            return redirect()->route('projects.boq.index', $project)->with('error', 'BOQ management privileges have been revoked. You cannot create details.');
+        }
+        
+        // Check if BOQ is locked
+        if ($section->boq->status === 'Locked') {
+            return redirect()->route('projects.boq.index', $project)->with('error', 'Cannot create detail. BOQ is locked.');
         }
         
         // Verify section belongs to this project's BOQ
@@ -83,8 +93,18 @@ class DetailController extends Controller
         $admin = Auth::guard('admin')->user();
         
         // Check if PM has access to this project
-        if ($admin->role === 'Project Manager' && $project->assigned_to !== $admin->username) {
-            return redirect()->route('projects.index')->with('error', 'Access denied to this project.');
+        if ($admin->role === 'Project Manager' && $project->assigned_to !== $admin->admin_id) {
+            return redirect()->route('projects.index')->with('error', 'This project is not assigned to you. You can only access BOQ for projects that are assigned to you.');
+        }
+        
+        // Check if PM can manage BOQ for this project
+        if (!$admin->canManageBoq($project)) {
+            return redirect()->route('projects.boq.index', $project)->with('error', 'Cannot create detail. BOQ is locked.');
+        }
+        
+        // Check if BOQ is locked
+        if ($section->boq->status === 'Locked') {
+            return redirect()->route('projects.boq.index', $project)->with('error', 'Cannot create detail. BOQ is locked.');
         }
         
         // Validate all detail information
@@ -110,6 +130,9 @@ class DetailController extends Controller
         
         $detail = Detail::create($validated);
         
+        // Update BOQ status to Open when details are being added
+        $section->boq->updateStatusToOpen();
+        
         return redirect()->route('sections.details.index', [$project, $section])
                        ->with('success', 'Detail created successfully.');
     }
@@ -122,8 +145,8 @@ class DetailController extends Controller
         $admin = Auth::guard('admin')->user();
         
         // Check if PM has access to this project
-        if ($admin->role === 'Project Manager' && $project->assigned_to !== $admin->username) {
-            return redirect()->route('projects.index')->with('error', 'Access denied to this project.');
+        if ($admin->role === 'Project Manager' && $project->assigned_to !== $admin->admin_id) {
+            return redirect()->route('projects.index')->with('error', 'This project is not assigned to you. You can only access BOQ for projects that are assigned to you.');
         }
         
         // Verify detail belongs to this section
@@ -144,8 +167,8 @@ class DetailController extends Controller
         $admin = Auth::guard('admin')->user();
         
         // Check if PM has access to this project
-        if ($admin->role === 'Project Manager' && $project->assigned_to !== $admin->username) {
-            return redirect()->route('projects.index')->with('error', 'Access denied to this project.');
+        if ($admin->role === 'Project Manager' && $project->assigned_to !== $admin->admin_id) {
+            return redirect()->route('projects.index')->with('error', 'This project is not assigned to you. You can only access BOQ for projects that are assigned to you.');
         }
         
         // Verify detail belongs to this section
@@ -171,9 +194,9 @@ class DetailController extends Controller
     {
         $admin = Auth::guard('admin')->user();
         
-        // Check if PM has access to this project
-        if ($admin->role === 'Project Manager' && $project->assigned_to !== $admin->username) {
-            return redirect()->route('projects.index')->with('error', 'Access denied to this project.');
+        // Check if detail can be edited (considering lock status)
+        if (!$detail->canBeEdited($admin)) {
+            return redirect()->route('sections.details.index', [$project, $section])->with('error', 'This BOQ is already locked or you do not have access to edit this detail.');
         }
         
         // Verify detail belongs to this section
@@ -225,9 +248,9 @@ class DetailController extends Controller
     {
         $admin = Auth::guard('admin')->user();
         
-        // Check if PM has access to this project
-        if ($admin->role === 'Project Manager' && $project->assigned_to !== $admin->username) {
-            return redirect()->route('projects.index')->with('error', 'Access denied to this project.');
+        // Check if detail can be deleted (considering lock status)
+        if (!$detail->canBeDeleted($admin)) {
+            return redirect()->route('sections.details.index', [$project, $section])->with('error', 'This BOQ is already locked or you do not have access to delete this detail.');
         }
         
         // Verify detail belongs to this section

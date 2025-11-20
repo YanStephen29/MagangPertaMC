@@ -3,7 +3,7 @@
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center">
             <div>
                 <h2 class="font-semibold text-lg sm:text-xl text-gray-800 leading-tight">
-                    Buat BOQ Baru
+                    Create New BOQ
                 </h2>
                 <p class="text-sm text-gray-600 mt-1">Project: {{ $project->title_project }} ({{ $project->no_IO }})</p>
             </div>
@@ -12,7 +12,7 @@
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                     </svg>
-                    Kembali
+                    Back
                 </a>
             </div>
         </div>
@@ -22,15 +22,7 @@
         <div class="w-full px-3 sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg border border-gray-200">
                 <div class="p-6">
-                    @if($errors->any())
-                        <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md mb-6">
-                            <ul class="list-disc list-inside">
-                                @foreach($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
+
 
                     <form action="{{ route('projects.boq.store', $project) }}" method="POST" class="space-y-6">
                         @csrf
@@ -40,7 +32,7 @@
                                 <svg class="w-4 h-4 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 20l4-16m2 16l4-16M6 9h14M4 15h14"></path>
                                 </svg>
-                                Nomor BOQ <span class="text-red-500">*</span>
+                                No BOQ <span class="text-red-500">*</span>
                             </label>
                             <input type="text" 
                                    name="nomorBoq" 
@@ -49,7 +41,7 @@
                                    readonly
                                    class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-50 text-gray-600 cursor-not-allowed"
                                    required>
-                            <p class="text-sm text-gray-600 mt-1">Nomor BOQ akan tergenerate otomatis</p>
+                            <p class="text-sm text-gray-600 mt-1">No BOQ will be generated automatically</p>
                         </div>
 
                         <!-- Date -->
@@ -58,7 +50,7 @@
                                 <svg class="w-4 h-4 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                                 </svg>
-                                Tanggal BOQ <span class="text-red-500">*</span>
+                                BOQ Date <span class="text-red-500">*</span>
                             </label>
                             <input type="date" 
                                    name="date" 
@@ -78,13 +70,13 @@
                                     <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
                                 </svg>
                                 <div class="ml-3">
-                                    <h3 class="text-sm font-medium text-blue-800">Informasi</h3>
+                                    <h3 class="text-sm font-medium text-blue-800">Information</h3>
                                     <div class="mt-2 text-sm text-blue-700">
                                         <ul class="list-disc list-inside space-y-1">
-                                            <li>BOQ akan dibuat untuk project: <strong>{{ $project->title_project }}</strong></li>
-                                            <li>Total harga akan dihitung otomatis berdasarkan sections</li>
-                                            <li>Setelah BOQ dibuat, Anda dapat menambahkan sections dan details</li>
-                                            <li>Nomor BOQ menggunakan format: BOQ[Tahun][Bulan][Urutan]</li>
+                                            <li>BOQ will be created for project: <strong>{{ $project->title_project }}</strong></li>
+                                            <li>Total price will be calculated automatically based on sections</li>
+                                            <li>After the BOQ is created, you can add sections and details</li>
+                                            <li>BOQ number uses the format: BOQ[Year][Month][Sequence]</li>
                                         </ul>
                                     </div>
                                 </div>
@@ -95,14 +87,14 @@
                         <div class="flex flex-col sm:flex-row justify-end gap-4">
                             <a href="{{ route('projects.boq.index', $project) }}" 
                                class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-md transition-colors duration-200 text-center">
-                                Batal
+                                Cancel
                             </a>
                             <button type="submit" 
                                     class="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-6 py-2 rounded-md shadow-md transform hover:scale-105 transition-all duration-200 inline-flex items-center">
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                                 </svg>
-                                Buat BOQ
+                                Create BOQ
                             </button>
                         </div>
                     </form>

@@ -8,7 +8,7 @@
                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                 </svg>
-                Kembali ke Daftar
+                 Back to List Documents
             </a>
         </div>
     </x-slot>
@@ -17,30 +17,7 @@
         <div class="w-full px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg border border-gray-200">
                 <div class="p-6 text-gray-900">
-                    <!-- Flash Messages -->
-                    @if(session('error'))
-                        <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md mb-6">
-                            {{ session('error') }}
-                        </div>
-                    @endif
-
-                    @if($errors->any())
-                        <div class="bg-red-50 border-l-4 border-red-400 p-4 mb-6 rounded-lg">
-                            <div class="flex">
-                                <svg class="w-5 h-5 text-red-400 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
-                                </svg>
-                                <div>
-                                    <h4 class="text-red-800 font-medium">Terdapat kesalahan input:</h4>
-                                    <ul class="list-disc list-inside mt-2 text-sm text-red-700">
-                                        @foreach($errors->all() as $error)
-                                            <li>{{ $error }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
+                    <!-- Notifikasi sudah ditangani di layout utama (app.blade.php) -->
 
                     <!-- Document Edit Form -->
                     <div class="bg-white border border-gray-200 rounded-lg shadow-sm">
@@ -62,7 +39,7 @@
                                     <!-- No Request -->
                                     <div>
                                         <label for="no_request" class="block text-sm font-medium text-gray-700 mb-2">
-                                            📋 Nomor Request
+                                            📋 Request No.
                                         </label>
                                         <input type="text" 
                                                name="no_request" 
@@ -78,7 +55,7 @@
                                     <!-- Jenis Request -->
                                     <div>
                                         <label for="jenis_request" class="block text-sm font-medium text-gray-700 mb-2">
-                                            🏷️ Jenis Request
+                                            🏷️ Request Type
                                         </label>
                                         <select name="jenis_request" 
                                                 id="jenis_request"
@@ -97,7 +74,7 @@
                                     <!-- Date Issue -->
                                     <div>
                                         <label for="date_issue" class="block text-sm font-medium text-gray-700 mb-2">
-                                            📅 Tanggal Issue
+                                            📅 Date Issue
                                         </label>
                                         <input type="date" 
                                                name="date_issue" 
@@ -112,12 +89,12 @@
                                     <!-- Description -->
                                     <div class="lg:col-span-2">
                                         <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
-                                            📝 Deskripsi (Opsional)
+                                            📝 Description (Optional)
                                         </label>
                                         <textarea name="description" 
                                                   id="description"
                                                   rows="4"
-                                                  placeholder="Masukkan deskripsi detail tentang document ini..."
+                                                  placeholder="Enter a detailed description about this document..."
                                                   class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500 @error('description') border-red-500 @enderror">{{ old('description', $document->description) }}</textarea>
                                         @error('description')
                                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -132,7 +109,7 @@
                                             <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
                                             </svg>
-                                            🎯 Update Tahapan Progress
+                                            Update Progress Stages
                                         </h3>
                                         <div class="text-right">
                                             <div class="text-xs text-gray-600 mb-1">Current Progress</div>
@@ -176,7 +153,7 @@
                                         <div>
                                             <label for="tahapan" class="block text-sm font-medium text-gray-700 mb-2">Update Tahapan</label>
                                             <select id="tahapan" name="tahapan" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-                                                <option value="">-- Select Tahapan to Update --</option>
+                                                <option value="">-- Select Stages to Update --</option>
                                                 @php
                                                     $allTahapanOptions = [
                                                         'BELUM DI PROSES',
@@ -190,13 +167,13 @@
                                                     <option value="{{ $option }}">{{ $option }}</option>
                                                 @endforeach
                                             </select>
-                                            <p class="mt-1 text-xs text-gray-500">Select tahapan to add or update with completion date.</p>
+                                            <p class="mt-1 text-xs text-gray-500">Select stages to add or update with completion date.</p>
                                         </div>
 
                                         <!-- Tahapan Date -->
                                         <div>
                                             <label for="tahapan_date" class="block text-sm font-medium text-gray-700 mb-2">
-                                                Tanggal Tahapan <span class="text-red-500">*</span>
+                                                Date Stages <span class="text-red-500">*</span>
                                             </label>
                                             <input type="date" 
                                                    id="tahapan_date" 
@@ -206,7 +183,7 @@
                                             @error('tahapan_date')
                                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                                             @enderror
-                                            <p class="mt-1 text-xs text-gray-500">Tanggal completion untuk tahapan yang dipilih. Wajib diisi jika memilih tahapan.</p>
+                                            <p class="mt-1 text-xs text-gray-500">Date completion for selected stages. Must be filled if selecting stages.</p>
                                         </div>
                                     </div>
 
@@ -284,7 +261,7 @@
                                             
                                             if (tahapanSelect.value && !tahapanDate.value) {
                                                 e.preventDefault();
-                                                alert('Tanggal tahapan wajib diisi jika memilih tahapan untuk diupdate!');
+                                                showToast('Date stage is required if selecting a tahapan to update!', 'warning');
                                                 tahapanDate.focus();
                                                 tahapanDate.style.borderColor = '#ef4444';
                                                 setTimeout(() => {
@@ -319,9 +296,9 @@
                                                 <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
                                             </svg>
                                             <div class="ml-3">
-                                                <h3 class="text-sm font-medium text-yellow-800">Peringatan</h3>
+                                                <h3 class="text-sm font-medium text-yellow-800">Warning</h3>
                                                 <div class="mt-2 text-sm text-yellow-700">
-                                                    <p>Document ini memiliki <strong>{{ $document->tools()->count() }} tools</strong> terkait. Perubahan nomor request akan mempengaruhi referensi tools tersebut.</p>
+                                                    <p>This document has <strong>{{ $document->tools()->count() }} related tools</strong>. Changing the request number will affect the references to these tools.</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -335,7 +312,7 @@
                                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                                         </svg>
-                                        Batal
+                                        Cancel
                                     </a>
                                     
                                     <button type="submit" 
@@ -358,7 +335,7 @@
                                     <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4"></path>
                                     </svg>
-                                    Tools Terkait ({{ $document->tools->count() }} tools)
+                                    Related Tools ({{ $document->tools->count() }} tools)
                                 </h3>
                             </div>
                             

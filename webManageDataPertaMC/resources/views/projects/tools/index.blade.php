@@ -70,7 +70,7 @@
                             </div>
                         </div>
                     @else
-                        <!-- When no tools, show back button with consistent styling -->
+                        <!-- When no tools, show only back button -->
                         <div class="mb-4 flex justify-between items-center">
                             <a href="{{ route('projects.index') }}" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors shadow-sm inline-flex items-center">
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -78,73 +78,72 @@
                                 </svg>
                                 Back to Projects
                             </a>
-                            <a href="{{ route('projects.tools.create', $project) }}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors shadow-sm inline-flex items-center">
-                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                                </svg>
-                                Add First Tool
-                            </a>
                         </div>
                     @endif
 
                     <!-- Search and Filter Section -->
                     <div class="mb-6 bg-gray-50 p-4 rounded-lg border">
-                        <form method="GET" action="{{ route('projects.tools.index', $project) }}" class="space-y-4">
-                            <div class="flex flex-col lg:flex-row gap-4 items-end">
-                                <!-- Search Input -->
-                                <div class="flex-1">
-                                    <label for="search" class="block text-sm font-medium text-gray-700 mb-2">
-                                        🔍 Search Request
-                                    </label>
-                                    <input type="text" 
-                                           name="search" 
-                                           id="search"
-                                           value="{{ request('search') }}"
-                                           placeholder="Search by description or unit..."
-                                           class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500 text-sm">
-                                </div>
-                                
-                                <!-- Document Filter -->
-                                <div class="w-full lg:w-48">
-                                    <label for="document" class="block text-sm font-medium text-gray-700 mb-2">
-                                        Document
-                                    </label>
-                                    <select name="document" 
-                                            id="document"
-                                            class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500 text-sm">
-                                        <option value="">All Document</option>
-                                        @foreach($documents as $doc)
-                                            <option value="{{ $doc->no_request }}" {{ request('document') == $doc->no_request ? 'selected' : '' }}>
-                                                {{ $doc->no_request }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                
-                                <!-- Action Buttons -->
-                                <div class="flex flex-col sm:flex-row gap-2 w-full lg:w-auto">
-                                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md shadow-sm transition-colors duration-200 text-sm font-medium inline-flex items-center justify-center">
-                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                                        </svg>
-                                        Search
-                                    </button>
-                                    
-                                    <a href="{{ route('projects.tools.index', $project) }}" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md shadow-sm transition-colors duration-200 text-sm font-medium inline-flex items-center justify-center">
-                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
-                                        </svg>
-                                        Reset
-                                    </a>
-                                    
-                                    <a href="{{ route('projects.tools.create', $project) }}" class="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-4 py-2 rounded-md shadow-md transform hover:scale-105 transition-all duration-200 text-sm font-medium inline-flex items-center justify-center">
-                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                                        </svg>
-                                        Add Request
-                                    </a>
-                                </div>
+                        <div class="flex flex-col lg:flex-row gap-4 items-end">
+                            <!-- Search Input -->
+                            <div class="flex-1">
+                                <label for="search" class="block text-sm font-medium text-gray-700 mb-2">
+                                    🔍 Search Request
+                                </label>
+                                <input type="text" 
+                                       name="search" 
+                                       id="search"
+                                       value="{{ request('search') }}"
+                                       placeholder="Search by description or unit..."
+                                       class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500 text-sm"
+                                       form="searchForm">
                             </div>
+                            
+                            <!-- Document Filter -->
+                            <div class="w-full lg:w-48">
+                                <label for="document" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Document
+                                </label>
+                                <select name="document" 
+                                        id="document"
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500 text-sm"
+                                        form="searchForm">
+                                    <option value="">All Document</option>
+                                    @foreach($documents as $doc)
+                                        <option value="{{ $doc->no_request }}" {{ request('document') == $doc->no_request ? 'selected' : '' }}>
+                                            {{ $doc->no_request }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            
+                            <!-- Action Buttons -->
+                            <div class="flex flex-col sm:flex-row gap-2 w-full lg:w-auto">
+                                <button type="submit" form="searchForm" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md shadow-sm transition-colors duration-200 text-sm font-medium inline-flex items-center justify-center">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                                    </svg>
+                                    Search
+                                </button>
+                                
+                                <a href="{{ route('projects.tools.index', $project) }}" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md shadow-sm transition-colors duration-200 text-sm font-medium inline-flex items-center justify-center">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                                    </svg>
+                                    Reset
+                                </a>
+                                
+                                <!-- Add Request Button - In same row -->
+                                <button id="addRequestBtn" type="button" class="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white px-4 py-2 rounded-md shadow-md transform hover:scale-105 transition-all duration-200 text-sm font-medium inline-flex items-center justify-center">
+                                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                    </svg>
+                                    Add Request
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Hidden form for search functionality -->
+                        <form id="searchForm" method="GET" action="{{ route('projects.tools.index', $project) }}" class="hidden">
                         </form>
                     </div>
 
@@ -183,6 +182,12 @@
                                         </th>
                                         <th class="px-3 sm:px-6 py-3 sm:py-4 text-center text-xs font-bold text-green-700 uppercase tracking-wider border-r border-gray-200 hidden lg:table-cell">
                                             Status Document
+                                        </th>
+                                        <th class="px-3 sm:px-6 py-3 sm:py-4 text-center text-xs font-bold text-green-700 uppercase tracking-wider border-r border-gray-200 hidden xl:table-cell">
+                                            Document Request Info
+                                        </th>
+                                        <th class="px-3 sm:px-6 py-3 sm:py-4 text-center text-xs font-bold text-green-700 uppercase tracking-wider border-r border-gray-200 hidden xl:table-cell">
+                                            Status Document Request
                                         </th>
                                         <th class="px-3 sm:px-6 py-3 sm:py-4 text-center text-xs font-bold text-green-700 uppercase tracking-wider border-r border-gray-200 hidden xl:table-cell">
                                             Status Request
@@ -277,43 +282,154 @@
                                                 @endif
                                             </td>
                                             
-                                            <!-- Status Request Column -->
+                                            <!-- Document Request Info Column -->
                                             <td class="px-3 sm:px-6 py-3 sm:py-4 text-sm border-r border-gray-100 hidden xl:table-cell">
-                                                @if($tool->document)
+                                                @if(!$tool->document)
+                                                    <!-- Tool not assigned to any document -->
+                                                    <div class="bg-gray-100 rounded-lg p-2">
+                                                        <div class="text-center">
+                                                            <span class="text-gray-500 text-xs">Not assigned yet</span>
+                                                            <div class="text-xs text-gray-400 mt-1">Assign tool to document first</div>
+                                                        </div>
+                                                    </div>
+                                                @else
                                                     @php
-                                                        $documentProgress = $tool->document->getProgressPercentage();
-                                                        $canAccess = $documentProgress >= 100;
-                                                        $requestStatus = $tool->document->request ? $tool->document->request->status_req : null;
-                                                        $requestColor = $tool->document->request ? $tool->document->request->getStatusColor() : 'gray';
+                                                        $isDocumentReady = $tool->document->status_dokumen === 'EPC TO PROCUREMENT';
                                                     @endphp
                                                     
-                                                    @if($canAccess)
-                                                        <!-- Can access - show actual status or create button -->
-                                                        @if($tool->document->request)
-                                                            <button onclick="showRequestModal('{{ $tool->document->no_request }}')" 
-                                                                    class="w-full bg-{{ $requestColor }}-100 hover:bg-{{ $requestColor }}-200 text-{{ $requestColor }}-800 px-3 py-2 rounded-md text-xs font-medium transition-colors duration-200">
-                                                                {{ $requestStatus }}
-                                                            </button>
-                                                        @else
-                                                            <button onclick="showRequestModal('{{ $tool->document->no_request }}')" 
-                                                                    class="w-full bg-blue-100 hover:bg-blue-200 text-blue-800 px-3 py-2 rounded-md text-xs font-medium transition-colors duration-200">
-                                                                Create Request
-                                                            </button>
-                                                        @endif
+                                                    @if(!$isDocumentReady)
+                                                        <!-- Document not ready for request -->
+                                                        <div class="bg-yellow-100 rounded-lg p-2">
+                                                            <div class="text-center">
+                                                                <span class="text-yellow-700 text-xs font-medium">Document not ready</span>
+                                                                <div class="text-xs text-yellow-600 mt-1">
+                                                                    Status: {{ $tool->document->status_dokumen }}
+                                                                </div>
+                                                                <div class="text-xs text-yellow-500 mt-1">Need: EPC TO PROCUREMENT</div>
+                                                            </div>
+                                                        </div>
                                                     @else
-                                                        <!-- Cannot access - show pending -->
-                                                        <button onclick="showPendingModal({{ $documentProgress }})" 
-                                                                class="w-full bg-gray-100 hover:bg-gray-200 text-gray-600 px-3 py-2 rounded-md text-xs font-medium transition-colors duration-200 cursor-not-allowed">
-                                                            Pending
-                                                        </button>
+                                                        @if($tool->request)
+                                                            <!-- Show existing request info with change option -->
+                                                            <div class="bg-green-100 rounded-lg p-2">
+                                                                <div class="font-medium text-green-800">{{ $tool->request->no_surat }}</div>
+                                                                <div class="text-xs text-green-600">{{ $tool->request->type_surat }} - {{ $tool->request->jenis_req }}</div>
+                                                                <div class="text-xs text-green-500">{{ $tool->request->date_req->format('d/m/Y') }}</div>
+                                                                <div class="flex justify-start mt-2">
+                                                                    @if(auth('admin')->user()->hasPrivilege('document_request_assign'))
+                                                                        <button class="text-xs bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded transition-colors change-request-btn" 
+                                                                                data-tool-id="{{ $tool->idTools }}"
+                                                                                data-current-request="{{ $tool->request->id_req }}">
+                                                                            Change
+                                                                        </button>
+                                                                    @else
+                                                                        <button class="text-xs bg-gray-400 text-gray-600 px-3 py-1 rounded cursor-not-allowed btn-disabled-privilege" 
+                                                                                data-action="mengubah request assignment"
+                                                                                disabled>
+                                                                            <i class="fas fa-lock mr-1"></i>Change
+                                                                        </button>
+                                                                    @endif
+                                                                </div>
+                                                            </div>
+                                                        @else
+                                                            <!-- Document ready, can assign/create request -->
+                                                            <div class="bg-blue-100 rounded-lg p-2">
+                                                                <div class="text-center mb-2">
+                                                                    <span class="text-blue-700 text-xs font-medium">Ready for request</span>
+                                                                    <div class="text-xs text-blue-600">Document: EPC TO PROCUREMENT</div>
+                                                                </div>
+                                                                <div class="flex flex-col space-y-1">
+                                                                    @if(auth('admin')->user()->hasPrivilege('document_request_assign'))
+                                                                        <button class="w-full text-xs bg-blue-600 hover:bg-blue-700 text-white px-2 py-1.5 rounded transition-colors assign-request-btn" 
+                                                                                data-tool-id="{{ $tool->idTools }}">
+                                                                            Assign Req
+                                                                        </button>
+                                                                    @else
+                                                                        <button class="w-full text-xs bg-gray-400 text-gray-600 px-2 py-1.5 rounded cursor-not-allowed btn-disabled-privilege" 
+                                                                                data-action="assign request"
+                                                                                disabled>
+                                                                            <i class="fas fa-lock mr-1"></i>Assign Req
+                                                                        </button>
+                                                                    @endif
+                                                                    
+                                                                    @if(auth('admin')->user()->hasPrivilege('document_request_create'))
+                                                                        <button onclick="showDocumentRequestModal('{{ $tool->document->no_request }}', true, '{{ $tool->idTools }}')" 
+                                                                                class="w-full text-xs bg-green-600 hover:bg-green-700 text-white px-2 py-1.5 rounded transition-colors">
+                                                                            Create New
+                                                                        </button>
+                                                                    @else
+                                                                        <button class="w-full text-xs bg-gray-400 text-gray-600 px-2 py-1.5 rounded cursor-not-allowed btn-disabled-privilege" 
+                                                                                data-action="membuat request baru"
+                                                                                disabled>
+                                                                            <i class="fas fa-lock mr-1"></i>Create New
+                                                                        </button>
+                                                                    @endif
+                                                                </div>
+                                                            </div>
+                                                        @endif
                                                     @endif
-                                                @else
+                                                @endif
+                                            </td>
+
+                                            <!-- Status Document Request Column -->
+                                            <td class="px-3 sm:px-6 py-3 sm:py-4 text-sm border-r border-gray-100 hidden xl:table-cell">
+                                                @if(!$tool->document)
                                                     <div class="bg-gray-100 rounded-lg p-2">
                                                         <div class="text-xs text-gray-500 text-center">
                                                             No Document
                                                         </div>
                                                     </div>
+                                                @else
+                                                    @php
+                                                        $isDocumentReady = $tool->document->status_dokumen === 'EPC TO PROCUREMENT';
+                                                    @endphp
+                                                    
+                                                    @if(!$isDocumentReady)
+                                                        <div class="bg-gray-100 rounded-lg p-2">
+                                                            <div class="text-xs text-gray-500 text-center">
+                                                                Document Not Ready
+                                                            </div>
+                                                        </div>
+                                                    @else
+                                                        @if($tool->request)
+                                                            @php
+                                                                $requestStatus = $tool->request->status_req;
+                                                                $requestColor = $tool->request->getStatusColor();
+                                                            @endphp
+                                                            @if(auth('admin')->user()->hasPrivilege('document_request_status_update'))
+                                                                <button onclick="showStatusDocumentRequestModal('{{ $tool->request->id_req }}')" 
+                                                                        class="w-full bg-{{ $requestColor }}-100 hover:bg-{{ $requestColor }}-200 text-{{ $requestColor }}-800 px-3 py-2 rounded-md text-xs font-medium transition-colors duration-200">
+                                                                    {{ $tool->request->getStatusDisplay() }}
+                                                                </button>
+                                                            @else
+                                                                <div class="w-full bg-{{ $requestColor }}-100 text-{{ $requestColor }}-800 px-3 py-2 rounded-md text-xs font-medium">
+                                                                    <div class="flex items-center justify-center">
+                                                                        <i class="fas fa-lock mr-1 text-gray-500"></i>
+                                                                        {{ $tool->request->getStatusDisplay() }}
+                                                                    </div>
+                                                                </div>
+                                                            @endif
+                                                        @else
+                                                            <div class="bg-yellow-100 rounded-lg p-2">
+                                                                <div class="text-xs text-yellow-800 text-center font-medium">
+                                                                    Ready - No Request
+                                                                </div>
+                                                            </div>
+                                                        @endif
+                                                    @endif
                                                 @endif
+                                            </td>
+
+                                            <!-- Status Request (Tools Status) Column -->
+                                            <td class="px-3 sm:px-6 py-3 sm:py-4 text-sm border-r border-gray-100 hidden xl:table-cell">
+                                                @php
+                                                    $toolStatusColor = $tool->getStatusToolsColor();
+                                                @endphp
+                                                <div class="bg-{{ $toolStatusColor }}-100 rounded-lg p-2">
+                                                    <div class="text-xs text-{{ $toolStatusColor }}-800 text-center font-medium">
+                                                        {{ $tool->getStatusToolsDisplay() }}
+                                                    </div>
+                                                </div>
                                             </td>
                                             
                                             <td class="px-3 sm:px-6 py-3 sm:py-4 text-sm text-gray-600 border-r border-gray-100 break-words hidden md:table-cell">
@@ -380,9 +496,17 @@
                                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                                             </svg>
-                                            Add New Tool
+                                            Add New Request
                                         </a>
                                     </div>
+                                @else
+                                    <!-- Add First Tool button when no tools exist -->
+                                    <a href="{{ route('projects.tools.create', $project) }}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors shadow-sm inline-flex items-center">
+                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                        </svg>
+                                        Add First Request
+                                    </a>
                                 @endif
                             </div>
                         </div>
@@ -477,18 +601,11 @@
                     <!-- Modal Header -->
                     <div class="relative bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 px-6 py-3">
                         <div class="flex items-center justify-between">
-                            <div class="flex items-center">
-                                <div class="p-2 bg-white bg-opacity-20 rounded-lg mr-3">
-                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
-                                    </svg>
-                                </div>
-                                <div>
-                                    <h3 class="text-lg font-bold text-white" id="assignModalTitle">
-                                        Assign Tool to Document
-                                    </h3>
-                                    <p class="text-blue-100 text-xs mt-0.5">Manage document assignment for tools</p>
-                                </div>
+                            <div>
+                                <h3 class="text-lg font-bold text-white" id="assignModalTitle">
+                                    Assign Tool to Document
+                                </h3>
+                                <p class="text-blue-100 text-xs mt-0.5">Manage document assignment for tools</p>
                             </div>
                             <button type="button" id="closeIndividualModal" class="p-2 text-white hover:text-gray-200 hover:bg-white hover:bg-opacity-20 rounded-lg transition-all duration-200">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -683,7 +800,7 @@
                 selectedToolsCount.textContent = selectedTools.length;
                 
                 if (selectedTools.length === 0) {
-                    alert('Pilih minimal satu tool terlebih dahulu');
+                    showToast('Choose at least one tool first', 'warning');
                     return;
                 }
                 
@@ -725,13 +842,13 @@
                 
                 if (toolIds.length === 0) {
                     e.preventDefault();
-                    alert('Error: There are no selected tools to assign');
+                    showToast('Error: There are no selected tools to assign', 'error');
                     return false;
                 }
                 
                 if (!document) {
                     e.preventDefault();
-                    alert('Error: Please select a document first');
+                    showToast('Error: Please select a document first', 'error');
                     return false;
                 }
             });
@@ -1136,8 +1253,19 @@
             `;
 
             // Fetch request data
-            fetch(`/requests/document/${encodeURIComponent(documentNo)}`)
-                .then(response => response.json())
+            fetch(`/requests/document/${encodeURIComponent(documentNo)}`, {
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+                    return response.json();
+                })
                 .then(data => {
                     if (data.error) {
                         // Show enhanced error modal for BOQ-related issues
@@ -1204,8 +1332,19 @@
                 .catch(error => {
                     console.error('Error:', error);
                     content.innerHTML = `
-                        <div class="text-center py-4">
-                            <p class="text-red-600">Error loading request data</p>
+                        <div class="text-center py-6">
+                            <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
+                                <svg class="h-6 w-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4H19a2 2 0 01-2-2V7a2 2 0 01-2-2H5a2 2 0 01-2 2v10a2 2 0 01-2 2z"></path>
+                                </svg>
+                            </div>
+                            <h3 class="text-lg font-medium text-gray-900 mb-2">Gagal Memuat Data</h3>
+                            <p class="text-red-600 mb-4">Tidak dapat memuat data request. Periksa koneksi dan coba lagi.</p>
+                            <div class="text-sm text-gray-500 mb-4">Error: ${error.message}</div>
+                            <button type="button" onclick="closeRequestModal()" 
+                                    class="bg-gray-300 hover:bg-gray-400 text-gray-700 px-6 py-2 rounded-md font-medium transition-colors">
+                                Tutup
+                            </button>
                         </div>
                     `;
                 });
@@ -1219,7 +1358,7 @@
                     <div class="space-y-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Type Surat</label>
-                            <select name="type_surat" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            <select name="type_surat" id="request_modal_type_surat" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                                 <option value="SPS" ${request && request.type_surat === 'SPS' ? 'selected' : ''}>SPS</option>
                                 <option value="SPMP" ${request && request.type_surat === 'SPMP' ? 'selected' : ''}>SPMP</option>
                                 <option value="PCM" ${request && request.type_surat === 'PCM' ? 'selected' : ''}>PCM</option>
@@ -1228,7 +1367,7 @@
                         
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Jenis Request</label>
-                            <select name="jenis_req" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            <select name="jenis_req" id="request_modal_jenis_req" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
                                 <option value="PO" ${request && request.jenis_req === 'PO' ? 'selected' : ''}>PO</option>
                                 <option value="Kontrak" ${request && request.jenis_req === 'Kontrak' ? 'selected' : ''}>Kontrak</option>
                                 <option value="PCM" ${request && request.jenis_req === 'PCM' ? 'selected' : ''}>PCM</option>
@@ -1237,7 +1376,22 @@
                         
                         <div>
                             <label class="block text-sm font-medium text-gray-700">No Surat</label>
-                            <input type="text" name="no_surat" value="${request ? request.no_surat : ''}" required maxlength="45" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            <div class="flex mt-1">
+                                <input type="text" 
+                                       id="request_modal_prefix" 
+                                       readonly
+                                       placeholder="Auto"
+                                       class="w-20 px-2 py-2 border border-gray-300 rounded-l-md bg-gray-100 text-gray-700 text-sm"
+                                       style="border-right: none;">
+                                <input type="text" 
+                                       name="no_surat_number" 
+                                       id="request_modal_number"
+                                       placeholder="Nomor seri"
+                                       value="${request ? (request.no_surat ? request.no_surat.split('-').slice(2).join('-') : '') : ''}"
+                                       required 
+                                       class="flex-1 px-3 py-2 border border-gray-300 rounded-r-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                                <input type="hidden" name="no_surat" id="request_modal_full" value="${request ? request.no_surat : ''}">
+                            </div>
                         </div>
                         
                         <div>
@@ -1248,7 +1402,8 @@
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Status Request</label>
                             <select name="status_req" required class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
-                                <option value="On Proses" ${!request || request.status_req === 'On Proses' ? 'selected' : ''}>On Proses</option>
+                                <option value="Pending" ${request && request.status_req === 'Pending' ? 'selected' : ''}>Pending</option>
+                                <option value="On Process" ${request && request.status_req === 'On Process' ? 'selected' : ''}>On Process</option>
                                 <option value="Closed" ${request && request.status_req === 'Closed' ? 'selected' : ''}>Closed</option>
                             </select>
                         </div>
@@ -1264,6 +1419,76 @@
                     </div>
                 </form>
             `;
+            
+            // Initialize request modal auto-generation system
+            setTimeout(() => {
+                initializeRequestModalAutoCode(request);
+            }, 100);
+        }
+        
+        function initializeRequestModalAutoCode(request) {
+            const typeSuratSelect = document.getElementById('request_modal_type_surat');
+            const jenisReqSelect = document.getElementById('request_modal_jenis_req');
+            const prefixInput = document.getElementById('request_modal_prefix');
+            const numberInput = document.getElementById('request_modal_number');
+            const fullInput = document.getElementById('request_modal_full');
+            
+            if (!typeSuratSelect || !jenisReqSelect || !prefixInput || !numberInput || !fullInput) {
+                console.error('Request modal elements not found');
+                return;
+            }
+            
+            // Request codes mapping
+            const requestCodes = {
+                'PO': 'PO',
+                'Kontrak': 'KT',
+                'PCM': 'PCM'
+            };
+            
+            function updateRequestPrefix() {
+                const selectedJenis = jenisReqSelect.value;
+                const code = requestCodes[selectedJenis] || '';
+                
+                if (code) {
+                    const currentYear = new Date().getFullYear();
+                    prefixInput.value = `${code}-${currentYear}-`;
+                    prefixInput.style.color = '#374151';
+                } else {
+                    prefixInput.value = '';
+                }
+                
+                updateFullRequestNumber();
+            }
+            
+            function updateFullRequestNumber() {
+                const prefix = prefixInput.value;
+                const number = numberInput.value;
+                
+                if (prefix && number) {
+                    const fullNumber = prefix + number;
+                    fullInput.value = fullNumber;
+                } else {
+                    fullInput.value = '';
+                }
+            }
+            
+            // Event listeners
+            jenisReqSelect.addEventListener('change', updateRequestPrefix);
+            numberInput.addEventListener('input', updateFullRequestNumber);
+            
+            // Initialize with existing values
+            if (request && request.no_surat) {
+                // Parse existing number
+                const parts = request.no_surat.split('-');
+                if (parts.length >= 3) {
+                    prefixInput.value = `${parts[0]}-${parts[1]}-`;
+                    numberInput.value = parts.slice(2).join('-');
+                    updateFullRequestNumber();
+                }
+            } else {
+                // Initialize for new request
+                updateRequestPrefix();
+            }
         }
 
         function updateRequest(event, requestId) {
@@ -1271,33 +1496,68 @@
             const form = event.target;
             const formData = new FormData(form);
             
-            const url = requestId ? `/requests/${requestId}` : '/requests';
-            const method = requestId ? 'PUT' : 'POST';
+            // Ensure full request number is set before submission
+            const prefixInput = document.getElementById('request_modal_prefix');
+            const numberInput = document.getElementById('request_modal_number');
+            const fullInput = document.getElementById('request_modal_full');
+            
+            if (prefixInput && numberInput && fullInput) {
+                const prefix = prefixInput.value;
+                const number = numberInput.value;
+                if (prefix && number) {
+                    const fullNumber = prefix + number;
+                    fullInput.value = fullNumber;
+                    formData.set('no_surat', fullNumber);
+                }
+            }
+            
+            const url = requestId ? `/requests/${requestId}/update` : '/requests';
+            const method = 'POST'; // Use POST for both create and update for now
             
             // Convert FormData to regular object for fetch
             const data = Object.fromEntries(formData.entries());
+            
+            console.log('Update request URL:', url);
+            console.log('Update request method:', method);
+            console.log('Update request data:', data);
             
             fetch(url, {
                 method: method,
                 headers: {
                     'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                 },
                 body: JSON.stringify(data)
             })
-            .then(response => response.json())
+            .then(response => {
+                console.log('Response status:', response.status);
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                return response.json();
+            })
             .then(data => {
+                console.log('Response data:', data);
                 if (data.error) {
-                    alert('Error: ' + data.message);
+                    showToast('Error: ' + data.message, 'error');
                 } else {
-                    alert(data.success || 'Request updated successfully!');
+                    showToast(data.success || 'Request updated successfully!', 'success');
+                    console.log('Status update successful, closing modal and reloading...');
                     closeRequestModal();
-                    location.reload(); // Refresh to show updated status
+                    
+                    // Add small delay to ensure modal closes before reload
+                    setTimeout(() => {
+                        console.log('Reloading page to show updated status...');
+                        location.reload(true); // Force reload from server
+                    }, 500);
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
-                alert('Error updating request');
+                console.error('Full error:', error);
+                showToast('Error updating request: ' + error.message, 'error');
+                console.error('Error details:', error);
             });
         }
 
@@ -1533,5 +1793,1289 @@
         #individualModalWrapper {
             padding-top: 4rem; /* Space for navbar */
         }
+
+        .scale-100 {
+            transform: scale(1);
+        }
+
+        /* Add Request Modal specific styles */
+        #addRequestModal {
+            z-index: 60 !important;
+        }
+
+        #addRequestModal .opacity-0 {
+            opacity: 0;
+        }
+
+        #addRequestModal .scale-95 {
+            transform: scale(0.95);
+        }
+
+        #addRequestModal .scale-100 {
+            transform: scale(1);
+        }
+
+        /* Change Request Options Modal specific styles */
+        #changeRequestOptionsModal {
+            z-index: 60 !important;
+        }
+
+        #changeRequestOptionsModal .opacity-0 {
+            opacity: 0;
+        }
+
+        #changeRequestOptionsModal .scale-95 {
+            transform: scale(0.95);
+        }
+
+        #changeRequestOptionsModal .scale-100 {
+            transform: scale(1);
+        }
     </style>
+
+    <!-- Add Request Modal -->
+    <div id="addRequestModal" class="fixed inset-0 hidden z-[60]">
+        <!-- Backdrop with blur -->
+        <div class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm transition-all duration-300 opacity-0" id="addRequestModalBackdrop"></div>
+        
+        <!-- Modal -->
+        <div class="fixed inset-0 flex items-center justify-center p-4 pt-16 pb-8 overflow-y-auto transition-all duration-300 opacity-0" id="addRequestModalWrapper">
+            <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full relative transform transition-all duration-300 scale-95 overflow-hidden border border-gray-100" id="addRequestModalContent">
+                <!-- Modal Header -->
+                <div class="relative bg-gradient-to-r from-green-600 via-green-700 to-emerald-700 px-6 py-3">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-lg font-bold text-white">
+                                Add Request Options
+                            </h3>
+                            <p class="text-green-100 text-xs mt-0.5">Choose how to create your request</p>
+                        </div>
+                        <button type="button" id="closeAddRequestModal" class="p-2 text-white hover:text-gray-200 hover:bg-white hover:bg-opacity-20 rounded-lg transition-all duration-200">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <!-- Decorative elements -->
+                    <div class="absolute top-0 right-0 -mt-1 -mr-1 w-10 h-10 bg-white bg-opacity-10 rounded-full"></div>
+                    <div class="absolute bottom-0 left-0 -mb-1 -ml-1 w-8 h-8 bg-white bg-opacity-10 rounded-full"></div>
+                </div>
+                
+                <!-- Modal Body -->
+                <div class="p-6 bg-gray-50">
+                    <div class="space-y-4">
+                        <!-- Option 1: Create Document -->
+                        <div class="border-2 border-gray-200 rounded-lg p-4 hover:border-blue-300 hover:bg-blue-50 cursor-pointer transition-all duration-200" onclick="selectOption('create-document')">
+                            <div class="flex items-center space-x-4">
+                                <div class="flex-shrink-0">
+                                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="flex-1">
+                                    <h4 class="text-lg font-medium text-gray-900">1. Create Document</h4>
+                                    <p class="text-gray-600 mt-1">Create new document first, then proceed to add request</p>
+                                </div>
+                                <div class="flex-shrink-0">
+                                    <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Option 2: Go To Request Tools -->
+                        <div class="border-2 border-gray-200 rounded-lg p-4 hover:border-green-300 hover:bg-green-50 cursor-pointer transition-all duration-200" onclick="selectOption('go-to-request')">
+                            <div class="flex items-center space-x-4">
+                                <div class="flex-shrink-0">
+                                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="flex-1">
+                                    <h4 class="text-lg font-medium text-gray-900">2. Continue To BOQ Selection</h4>
+                                    <p class="text-gray-600 mt-1">Directly proceed to BOQ selection and tool creation</p>
+                                </div>
+                                <div class="flex-shrink-0">
+                                    <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Document Request Modal -->
+    <div id="documentRequestModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden opacity-0 z-50 transition-opacity duration-300">
+        <div class="relative top-20 mx-auto p-5 border w-11/12 max-w-lg shadow-xl rounded-lg bg-white transform transition-all duration-300 scale-95" id="documentRequestModalContent">
+            <div class="mt-3">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-medium text-gray-900">Document Request Info</h3>
+                    <button onclick="closeDocumentRequestModal()" class="text-gray-400 hover:text-gray-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                
+                <form id="documentRequestForm" method="POST">
+                    @csrf
+                    <div class="space-y-4">
+                        <!-- Option Selection -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Select Option</label>
+                            <div class="space-y-2">
+                                <label class="flex items-center">
+                                    <input type="radio" name="request_option" value="existing" class="mr-2" onchange="toggleRequestOptions()">
+                                    <span class="text-sm">Assign to Existing Request</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="radio" name="request_option" value="new" class="mr-2" onchange="toggleRequestOptions()">
+                                    <span class="text-sm">Create New Request</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Existing Request Selection -->
+                        <div id="existingRequestSection" class="hidden">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Select Existing Request</label>
+                            <select name="existing_request_id" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                                <option value="">Select a request...</option>
+                                <!-- Will be populated by JavaScript -->
+                            </select>
+                        </div>
+
+                        <!-- New Request Form -->
+                        <div id="newRequestSection" class="hidden space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">No. Request</label>
+                                <div class="flex">
+                                    <input type="text" 
+                                           id="modal_no_request_prefix" 
+                                           readonly
+                                           placeholder="Pilih jenis"
+                                           class="w-24 px-2 py-2 border border-gray-300 rounded-l-md bg-gray-100 text-gray-700 text-sm"
+                                           style="border-right: none;">
+                                    <input type="text" 
+                                           name="no_surat_number" 
+                                           id="modal_no_request_number"
+                                           placeholder="Contoh: 001"
+                                           class="flex-1 px-3 py-2 border border-gray-300 rounded-r-md">
+                                    <input type="hidden" name="no_surat" id="modal_no_request_full">
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1">Masukkan nomor seri saja. Kode akan otomatis ditambahkan berdasarkan jenis request</p>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Type Request</label>
+                                <select name="type_surat" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                                    <option value="">Select type...</option>
+                                    <option value="SPS">SPS</option>
+                                    <option value="SPMP">SPMP</option>
+                                    <option value="PCM">PCM</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Request Type</label>
+                                <select name="jenis_req" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                                    <option value="">Select type...</option>
+                                    <option value="PO">PO</option>
+                                    <option value="Kontrak">Kontrak</option>
+                                    <option value="PCM">PCM</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Date Request</label>
+                                <input type="date" name="date_req" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end space-x-3 mt-6">
+                        <button type="button" onclick="closeDocumentRequestModal()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400">
+                            Cancel
+                        </button>
+                        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                            Save
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Status Document Request Modal -->
+    <div id="statusDocumentRequestModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden opacity-0 z-50 transition-opacity duration-300">
+        <div class="relative top-20 mx-auto p-5 border w-11/12 max-w-md shadow-xl rounded-lg bg-white transform transition-all duration-300 scale-95" id="statusDocumentRequestModalContent">
+            <div class="mt-3">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-medium text-gray-900">Update Status Document Request</h3>
+                    <button onclick="closeStatusDocumentRequestModal()" class="text-gray-400 hover:text-gray-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                
+                <form id="statusDocumentRequestForm" method="POST">
+                    @csrf
+                    @method('PATCH')
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Status Document Request</label>
+                            <select name="status_req" class="w-full px-3 py-2 border border-gray-300 rounded-md">
+                                <option value="Pending">Pending</option>
+                                <option value="On Process">On Process</option>
+                                <option value="Closed">Closed</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end space-x-3 mt-6">
+                        <button type="button" onclick="closeStatusDocumentRequestModal()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400">
+                            Cancel
+                        </button>
+                        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                            Update Status
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Assign Request Modal -->
+    <div id="assignRequestModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden opacity-0 z-50 transition-opacity duration-300">
+        <div class="relative top-20 mx-auto p-5 border w-11/12 max-w-md shadow-xl rounded-lg bg-white transform transition-all duration-300 scale-95" id="assignRequestModalContent">
+            <div class="mt-3">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-medium text-gray-900">Assign Document Request</h3>
+                    <button onclick="closeAssignRequestModal()" class="text-gray-400 hover:text-gray-600">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                
+                <form id="assignRequestForm" method="POST" action="{{ route('projects.tools.assign-request', $project->no_IO) }}">
+                    @csrf
+                    <input type="hidden" name="tool_id" id="assignRequestToolId">
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Select Document Request</label>
+                            <select name="request_id" id="availableRequestsSelect" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500" required>
+                                <option value="">Choose existing request...</option>
+                            </select>
+                        </div>
+                        
+                        <div class="bg-gray-50 p-3 rounded-md">
+                            <h4 class="text-sm font-medium text-gray-700 mb-2">Selected Request Details:</h4>
+                            <div id="selectedRequestDetails" class="text-sm text-gray-600">
+                                <p>No request selected</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end space-x-3 mt-6">
+                        <button type="button" onclick="closeAssignRequestModal()" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400">
+                            Cancel
+                        </button>
+                        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+                            Assign Request
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Change Request Options Modal -->
+    <div id="changeRequestOptionsModal" class="fixed inset-0 hidden z-[60]">
+        <!-- Backdrop with blur -->
+        <div class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm transition-all duration-300 opacity-0" id="changeRequestOptionsModalBackdrop"></div>
+        
+        <!-- Modal -->
+        <div class="fixed inset-0 flex items-center justify-center p-4 pt-16 pb-8 overflow-y-auto transition-all duration-300 opacity-0" id="changeRequestOptionsModalWrapper">
+            <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full relative transform transition-all duration-300 scale-95 overflow-hidden border border-gray-100" id="changeRequestOptionsModalContent">
+                <!-- Modal Header -->
+                <div class="relative bg-gradient-to-r from-orange-600 via-orange-700 to-red-700 px-6 py-3">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-xl font-bold text-white flex items-center">
+                            <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4"></path>
+                            </svg>
+                            Change Request Options
+                        </h3>
+                        <button onclick="closeChangeRequestOptionsModal()" id="closeChangeRequestOptionsModal" class="text-white hover:text-gray-200 transition-colors duration-200 p-1 rounded-full hover:bg-white hover:bg-opacity-20">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <!-- Decorative elements -->
+                    <div class="absolute top-0 right-0 -mt-1 -mr-1 w-10 h-10 bg-white bg-opacity-10 rounded-full"></div>
+                    <div class="absolute bottom-0 left-0 -mb-1 -ml-1 w-8 h-8 bg-white bg-opacity-10 rounded-full"></div>
+                </div>
+                
+                <!-- Modal Body -->
+                <div class="p-6 bg-gray-50">
+                    <div class="space-y-4">
+                        <div class="text-center mb-4">
+                            <p class="text-gray-600">Choose how you want to change the request assignment:</p>
+                        </div>
+                        
+                        <!-- Assign to Existing Request Option -->
+                        <div class="border-2 border-blue-200 rounded-lg p-4 hover:border-blue-300 hover:bg-blue-50 cursor-pointer transition-all duration-200" onclick="selectChangeOption('assign-existing')">
+                            <div class="flex items-start space-x-3">
+                                <div class="flex-shrink-0">
+                                    <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="flex-1">
+                                    <h4 class="text-lg font-semibold text-gray-900 mb-1">Assign to Existing Request</h4>
+                                    <p class="text-sm text-gray-600 mb-2">Choose from existing requests to assign to this tool</p>
+                                    <div class="text-xs text-blue-600 font-medium">Select from available requests</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Create New Document Option -->
+                        <div class="border-2 border-green-200 rounded-lg p-4 hover:border-green-300 hover:bg-green-50 cursor-pointer transition-all duration-200" onclick="selectChangeOption('create-new')">
+                            <div class="flex items-start space-x-3">
+                                <div class="flex-shrink-0">
+                                    <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                                        <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="flex-1">
+                                    <h4 class="text-lg font-semibold text-gray-900 mb-1">Create New Request</h4>
+                                    <p class="text-sm text-gray-600 mb-2">Create a brand new request and assign it to this tool</p>
+                                    <div class="text-xs text-green-600 font-medium">Start from scratch</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Document Request Modal Functions
+        function showDocumentRequestModal(documentNo, createOnlyMode = false, toolId = null) {
+            const modal = document.getElementById('documentRequestModal');
+            const form = document.getElementById('documentRequestForm');
+            
+            // Set form action
+            form.action = `/projects/{{ $project->no_IO }}/tools/assign-document-request`;
+            
+            // Add hidden field for document number
+            let hiddenInput = form.querySelector('input[name="document_no"]');
+            if (!hiddenInput) {
+                hiddenInput = document.createElement('input');
+                hiddenInput.type = 'hidden';
+                hiddenInput.name = 'document_no';
+                form.appendChild(hiddenInput);
+            }
+            hiddenInput.value = documentNo;
+            
+            // Add hidden field for tool ID in create mode
+            if (createOnlyMode && toolId) {
+                let toolIdInput = form.querySelector('input[name="tool_id"]');
+                if (!toolIdInput) {
+                    toolIdInput = document.createElement('input');
+                    toolIdInput.type = 'hidden';
+                    toolIdInput.name = 'tool_id';
+                    form.appendChild(toolIdInput);
+                }
+                toolIdInput.value = toolId;
+            }
+            
+            // Reset form and show create mode
+            resetDocumentRequestModal();
+            
+            if (createOnlyMode) {
+                // Hide option selection and go directly to create new mode
+                document.querySelector('input[name="request_option"][value="new"]').checked = true;
+                document.getElementById('existingRequestSection').classList.add('hidden');
+                document.getElementById('newRequestSection').classList.remove('hidden');
+                
+                // Hide the option selection section entirely
+                const optionSection = document.querySelector('#documentRequestModal input[name="request_option"]').closest('div');
+                if (optionSection) {
+                    optionSection.style.display = 'none';
+                }
+                
+                // Change modal title for create-only mode
+                const modalTitle = document.querySelector('#documentRequestModal h3');
+                modalTitle.textContent = 'Create New Request';
+                
+                // Set form action for creating new request and linking to tool
+                form.action = `/projects/{{ $project->no_IO }}/tools/create-and-assign-request`;
+                
+                // Initialize auto-generation system for new request
+                setTimeout(() => {
+                    initializeAddRequestModalAutoCode();
+                }, 100);
+            } else {
+                // Show option selection for normal mode
+                const optionSection = document.querySelector('#documentRequestModal input[name="request_option"]').closest('div');
+                if (optionSection) {
+                    optionSection.style.display = 'block';
+                }
+                
+                // Reset modal title for normal mode
+                const modalTitle = document.querySelector('#documentRequestModal h3');
+                modalTitle.textContent = 'Document Request Info';
+                
+                // Load existing requests for dropdown
+                loadExistingRequests();
+            }
+            
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                document.getElementById('documentRequestModalContent').classList.remove('scale-95');
+            }, 10);
+        }
+
+        function editDocumentRequestInfo(documentNo, requestId) {
+            const modal = document.getElementById('documentRequestModal');
+            const form = document.getElementById('documentRequestForm');
+            const modalTitle = document.querySelector('#documentRequestModal h3');
+            
+            // Change modal title
+            modalTitle.textContent = 'Edit Document Request Info';
+            
+            // Set form action to update route
+            form.action = `/requests/${requestId}/update`;
+            
+            // Add hidden fields
+            let documentInput = form.querySelector('input[name="document_no"]');
+            if (!documentInput) {
+                documentInput = document.createElement('input');
+                documentInput.type = 'hidden';
+                documentInput.name = 'document_no';
+                form.appendChild(documentInput);
+            }
+            documentInput.value = documentNo;
+            
+            let requestIdInput = form.querySelector('input[name="request_id"]');
+            if (!requestIdInput) {
+                requestIdInput = document.createElement('input');
+                requestIdInput.type = 'hidden';
+                requestIdInput.name = 'request_id';
+                form.appendChild(requestIdInput);
+            }
+            requestIdInput.value = requestId;
+            
+            // Load existing request data
+            loadRequestForEdit(requestId);
+            
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                document.getElementById('documentRequestModalContent').classList.remove('scale-95');
+            }, 10);
+        }
+
+        function resetDocumentRequestModal() {
+            const modalTitle = document.querySelector('#documentRequestModal h3');
+            modalTitle.textContent = 'Document Request Info';
+            
+            // Reset form
+            const form = document.getElementById('documentRequestForm');
+            form.reset();
+            
+            // Reset form action to default (will be set by toggleRequestOptions)
+            form.action = `/projects/{{ $project->no_IO }}/tools/assign-document-request`;
+            
+            // Hide sections
+            document.getElementById('existingRequestSection').classList.add('hidden');
+            document.getElementById('newRequestSection').classList.add('hidden');
+            
+            // Show option selection section (in case it was hidden for create-only mode)
+            const optionSection = document.querySelector('#documentRequestModal input[name="request_option"]').closest('div');
+            if (optionSection) {
+                optionSection.style.display = 'block';
+            }
+            
+            // Remove hidden request_id field if exists
+            const requestIdInput = form.querySelector('input[name="request_id"]');
+            if (requestIdInput) {
+                requestIdInput.remove();
+            }
+        }
+
+        function closeDocumentRequestModal() {
+            const modal = document.getElementById('documentRequestModal');
+            const modalContent = document.getElementById('documentRequestModalContent');
+            
+            modal.classList.add('opacity-0');
+            modalContent.classList.add('scale-95');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        function toggleRequestOptions() {
+            const existingSection = document.getElementById('existingRequestSection');
+            const newSection = document.getElementById('newRequestSection');
+            const selectedOption = document.querySelector('input[name="request_option"]:checked').value;
+            const form = document.getElementById('documentRequestForm');
+            
+            if (selectedOption === 'existing') {
+                existingSection.classList.remove('hidden');
+                newSection.classList.add('hidden');
+                
+                // Set action for assigning existing request to tool
+                form.action = `/projects/{{ $project->no_IO }}/tools/assign-document-request`;
+            } else {
+                existingSection.classList.add('hidden');
+                newSection.classList.remove('hidden');
+                
+                // Set action for creating new request
+                form.action = `/requests/create`;
+                
+                // Initialize auto-generation system for new request
+                setTimeout(() => {
+                    initializeAddRequestModalAutoCode();
+                }, 100);
+            }
+        }
+
+        function loadExistingRequests() {
+            console.log('loadExistingRequests() called');
+            
+            fetch('/admin/api/requests', {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+                .then(response => {
+                    console.log('Response status:', response.status);
+                    console.log('Response headers:', response.headers);
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Received data:', data);
+                    
+                    const select = document.querySelector('select[name="existing_request_id"]');
+                    select.innerHTML = '<option value="">Select a request...</option>';
+                    
+                    if (Array.isArray(data) && data.length > 0) {
+                        data.forEach(request => {
+                            const option = document.createElement('option');
+                            option.value = request.id_req;
+                            option.textContent = `${request.no_surat} - ${request.type_surat} - ${request.jenis_req} (${request.status_req})`;
+                            select.appendChild(option);
+                        });
+                        console.log('Added', data.length, 'options to dropdown');
+                    } else {
+                        console.log('No requests found or data is not an array');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading requests:', error);
+                });
+        }
+
+        function loadRequestForEdit(requestId) {
+            console.log('Loading request for edit, ID:', requestId);
+            console.log('CSRF Token:', document.querySelector('meta[name="csrf-token"]')?.getAttribute('content'));
+            console.log('Request URL:', `/requests/${requestId}/details`);
+            
+            fetch(`/requests/${requestId}/details`, {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+                .then(response => {
+                    console.log('Response status:', response.status);
+                    console.log('Response ok:', response.ok);
+                    console.log('Response type:', response.type);
+                    console.log('Response url:', response.url);
+                    
+                    // Try to get response text for debugging
+                    return response.text().then(text => {
+                        console.log('Raw response text:', text);
+                        
+                        if (!response.ok) {
+                            throw new Error(`HTTP ${response.status}: ${response.statusText} - ${text}`);
+                        }
+                        
+                        try {
+                            const data = JSON.parse(text);
+                            return data;
+                        } catch (e) {
+                            console.error('JSON parse error:', e);
+                            console.error('Response was not valid JSON:', text);
+                            throw new Error('Invalid JSON response');
+                        }
+                    });
+                })
+                .then(data => {
+                    console.log('Response data:', data);
+                    
+                    if (data.error) {
+                        showToast('Error loading request data: ' + data.error, 'error');
+                        return;
+                    }
+                    
+                    const request = data.request;
+                    
+                    // Show new request section with existing data
+                    document.querySelector('input[name="request_option"][value="new"]').checked = true;
+                    document.getElementById('newRequestSection').classList.remove('hidden');
+                    document.getElementById('existingRequestSection').classList.add('hidden');
+                    
+                    // Fill form with existing data
+                    document.querySelector('select[name="type_surat"]').value = request.type_surat;
+                    document.querySelector('select[name="jenis_req"]').value = request.jenis_req;
+                    document.querySelector('input[name="date_req"]').value = request.date_req;
+                    
+                    // Handle no_surat with auto-code system
+                    const noSurat = request.no_surat;
+                    const parts = noSurat.split('-');
+                    if (parts.length >= 3) {
+                        document.getElementById('modal_no_request_prefix').value = `${parts[0]}-${parts[1]}-`;
+                        document.getElementById('modal_no_request_number').value = parts.slice(2).join('-');
+                        document.getElementById('modal_no_request_full').value = noSurat;
+                    } else {
+                        // Fallback if format doesn't match expected pattern
+                        document.getElementById('modal_no_request_number').value = noSurat;
+                        document.getElementById('modal_no_request_full').value = noSurat;
+                    }
+                    
+                    // Initialize auto-code system
+                    setTimeout(() => {
+                        initializeAddRequestModalAutoCode();
+                    }, 100);
+                })
+                .catch(error => {
+                    console.error('Error loading request:', error);
+                    showToast('Error loading request data: ' + error.message, 'error');
+                });
+        }
+
+        // Status Document Request Modal Functions
+        function showStatusDocumentRequestModal(requestId) {
+            const modal = document.getElementById('statusDocumentRequestModal');
+            const form = document.getElementById('statusDocumentRequestForm');
+            
+            form.action = `/requests/${requestId}/status`;
+            
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                document.getElementById('statusDocumentRequestModalContent').classList.remove('scale-95');
+            }, 10);
+        }
+
+        function closeStatusDocumentRequestModal() {
+            const modal = document.getElementById('statusDocumentRequestModal');
+            const modalContent = document.getElementById('statusDocumentRequestModalContent');
+            
+            modal.classList.add('opacity-0');
+            modalContent.classList.add('scale-95');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        // Initialize modal auto-generation system for Add Request modal
+        function initializeAddRequestModalAutoCode() {
+            const jenisReqSelect = document.querySelector('#newRequestSection select[name="jenis_req"]');
+            const prefixInput = document.getElementById('modal_no_request_prefix');
+            const numberInput = document.getElementById('modal_no_request_number');
+            const fullInput = document.getElementById('modal_no_request_full');
+            
+            if (!jenisReqSelect || !prefixInput || !numberInput || !fullInput) {
+                console.log('Add Request modal elements not found');
+                return;
+            }
+            
+            // Request codes mapping for Add Request modal
+            const requestCodes = {
+                'PO': 'PO',
+                'Kontrak': 'KT',
+                'PCM': 'PCM'
+            };
+            
+            function updateModalPrefix() {
+                const selectedJenis = jenisReqSelect.value;
+                const code = requestCodes[selectedJenis] || '';
+                
+                if (code) {
+                    const currentYear = new Date().getFullYear();
+                    prefixInput.value = `${code}-${currentYear}-`;
+                    prefixInput.style.color = '#374151';
+                } else {
+                    prefixInput.value = '';
+                }
+                
+                updateModalFullNumber();
+            }
+            
+            function updateModalFullNumber() {
+                const prefix = prefixInput.value;
+                const number = numberInput.value;
+                
+                if (prefix && number) {
+                    const fullNumber = prefix + number;
+                    fullInput.value = fullNumber;
+                } else {
+                    fullInput.value = '';
+                }
+            }
+            
+            // Event listeners
+            jenisReqSelect.addEventListener('change', updateModalPrefix);
+            numberInput.addEventListener('input', updateModalFullNumber);
+            
+            // Initialize
+            updateModalPrefix();
+        }
+        
+        // Handle form submissions
+        document.getElementById('documentRequestForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get request option to determine which fields to send
+            const requestOption = document.querySelector('input[name="request_option"]:checked').value;
+            console.log('Request option:', requestOption);
+            
+            // Create FormData and add only required fields based on request option
+            const formData = new FormData();
+            
+            // Always add CSRF token
+            formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+            
+            // Always add document_no and request_option
+            const documentNo = document.querySelector('input[name="document_no"]').value;
+            formData.append('document_no', documentNo);
+            formData.append('request_option', requestOption);
+            
+            if (requestOption === 'existing') {
+                // For existing request, only send existing_request_id
+                const existingRequestId = document.querySelector('select[name="existing_request_id"]').value;
+                formData.append('existing_request_id', existingRequestId);
+            } else {
+                // For new request, ensure full number is set and send all new request fields
+                const prefixInput = document.getElementById('modal_no_request_prefix');
+                const numberInput = document.getElementById('modal_no_request_number');
+                const fullInput = document.getElementById('modal_no_request_full');
+                
+                if (prefixInput && numberInput && fullInput) {
+                    const prefix = prefixInput.value;
+                    const number = numberInput.value;
+                    if (prefix && number) {
+                        fullInput.value = prefix + number;
+                    }
+                }
+                
+                // Add all new request fields
+                formData.append('no_surat', fullInput.value);
+                formData.append('type_surat', document.querySelector('select[name="type_surat"]').value);
+                formData.append('jenis_req', document.querySelector('select[name="jenis_req"]').value);
+                formData.append('date_req', document.querySelector('input[name="date_req"]').value);
+                
+                // Add tool_id if exists (for create and assign mode)
+                const toolIdInput = document.querySelector('input[name="tool_id"]');
+                if (toolIdInput && toolIdInput.value) {
+                    formData.append('tool_id', toolIdInput.value);
+                }
+            }
+            
+            const isUpdate = this.action.includes('/update');
+            console.log('Form action:', this.action);
+            console.log('Is update?', isUpdate);
+            
+            // Add method override for PUT request if updating
+            if (isUpdate) {
+                formData.append('_method', 'PUT');
+            }
+            
+            // Log what we're sending
+            for (let [key, value] of formData.entries()) {
+                console.log(`${key}: ${value}`);
+            }
+            
+            fetch(this.action, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Accept': 'application/json'
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast(data.success, 'success');
+                    closeDocumentRequestModal();
+                    location.reload();
+                } else {
+                    showToast(data.error || 'An error occurred', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('An error occurred while processing the request', 'error');
+            });
+        });
+
+        document.getElementById('statusDocumentRequestForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            
+            fetch(this.action, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast(data.success, 'success');
+                    closeStatusDocumentRequestModal();
+                    location.reload();
+                } else {
+                    showToast(data.error || 'An error occurred', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('An error occurred while updating status', 'error');
+            });
+        });
+
+        // Change Request Options Modal Functions
+        function showChangeRequestOptionsModal() {
+            // Check if any other modal is open and close them first
+            const allModals = document.querySelectorAll('[id$="Modal"]');
+            allModals.forEach(modal => {
+                if (modal.id !== 'changeRequestOptionsModal' && !modal.classList.contains('hidden')) {
+                    modal.classList.add('hidden');
+                }
+            });
+            
+            const modal = document.getElementById('changeRequestOptionsModal');
+            const modalBackdrop = document.getElementById('changeRequestOptionsModalBackdrop');
+            const modalWrapper = document.getElementById('changeRequestOptionsModalWrapper');
+            const modalContent = document.getElementById('changeRequestOptionsModalContent');
+            
+            if (!modal || !modalBackdrop || !modalWrapper || !modalContent) {
+                console.error('Change Request Options Modal elements not found');
+                return;
+            }
+            
+            // Show modal with entrance animation
+            modal.classList.remove('hidden');
+            
+            // Trigger reflow to ensure the element is rendered
+            modal.offsetHeight;
+            
+            setTimeout(() => {
+                modalBackdrop.classList.remove('opacity-0');
+                modalWrapper.classList.remove('opacity-0');
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeChangeRequestOptionsModal() {
+            const modal = document.getElementById('changeRequestOptionsModal');
+            const modalBackdrop = document.getElementById('changeRequestOptionsModalBackdrop');
+            const modalWrapper = document.getElementById('changeRequestOptionsModalWrapper');
+            const modalContent = document.getElementById('changeRequestOptionsModalContent');
+            
+            if (!modal || !modalBackdrop || !modalWrapper || !modalContent) {
+                console.error('Change Request Options Modal elements not found for closing');
+                return;
+            }
+            
+            modalBackdrop.classList.add('opacity-0');
+            modalWrapper.classList.add('opacity-0');
+            modalContent.classList.remove('scale-100');
+            modalContent.classList.add('scale-95');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        function selectChangeOption(option) {
+            console.log('Change option selected:', option);
+            closeChangeRequestOptionsModal();
+            
+            setTimeout(() => {
+                if (option === 'assign-existing') {
+                    // Show assign request modal
+                    showAssignRequestModal(window.currentChangeToolId);
+                } else if (option === 'create-new') {
+                    // Show document request modal for creating new (create-only mode)
+                    showDocumentRequestModal('', true, window.currentChangeToolId);
+                }
+            }, 100);
+        }
+
+        // Add Request Modal Functions
+        function showAddRequestModal() {
+            // Check if any other modal is open and close them first
+            const allModals = document.querySelectorAll('[id$="Modal"]');
+            allModals.forEach(modal => {
+                if (modal.id !== 'addRequestModal' && !modal.classList.contains('hidden')) {
+                    modal.classList.add('hidden');
+                }
+            });
+            
+            const modal = document.getElementById('addRequestModal');
+            const modalBackdrop = document.getElementById('addRequestModalBackdrop');
+            const modalWrapper = document.getElementById('addRequestModalWrapper');
+            const modalContent = document.getElementById('addRequestModalContent');
+            
+            if (!modal || !modalBackdrop || !modalWrapper || !modalContent) {
+                console.error('Modal elements not found');
+                return;
+            }
+            
+            // Show modal with entrance animation
+            modal.classList.remove('hidden');
+            
+            // Trigger reflow to ensure the element is rendered
+            modal.offsetHeight;
+            
+            setTimeout(() => {
+                modalBackdrop.classList.remove('opacity-0');
+                modalWrapper.classList.remove('opacity-0');
+                modalContent.classList.remove('scale-95');
+                modalContent.classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeAddRequestModal() {
+            const modal = document.getElementById('addRequestModal');
+            const modalBackdrop = document.getElementById('addRequestModalBackdrop');
+            const modalWrapper = document.getElementById('addRequestModalWrapper');
+            const modalContent = document.getElementById('addRequestModalContent');
+            
+            if (!modal || !modalBackdrop || !modalWrapper || !modalContent) {
+                console.error('Modal elements not found for closing');
+                return;
+            }
+            
+            modalBackdrop.classList.add('opacity-0');
+            modalWrapper.classList.add('opacity-0');
+            modalContent.classList.remove('scale-100');
+            modalContent.classList.add('scale-95');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        function selectOption(option) {
+            console.log('Option selected:', option);
+            closeAddRequestModal();
+            
+            setTimeout(() => {
+                if (option === 'create-document') {
+                    // Redirect to create document page with parameters
+                    window.location.href = '{{ route("documents.create") }}?from_add_request=1&project_id={{ $project->no_IO }}';
+                } else if (option === 'go-to-request') {
+                    // Redirect to BOQ selection for request tools
+                    window.location.href = '{{ route("projects.tools.select-boq-items", $project) }}';
+                }
+            }, 100);
+        }
+
+        // Add Request Modal Event Listeners - with error handling
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, setting up event listeners...');
+            
+            // Add button click event
+            const addRequestBtn = document.getElementById('addRequestBtn');
+            if (addRequestBtn) {
+                addRequestBtn.addEventListener('click', function(e) {
+                    console.log('Add Request Button clicked via event listener');
+                    e.preventDefault();
+                    e.stopPropagation();
+                    showAddRequestModal();
+                    return false;
+                });
+                console.log('Add request button event listener added');
+            } else {
+                console.error('Add request button not found');
+            }
+            
+            // Enable other event listeners
+            const closeBtn = document.getElementById('closeAddRequestModal');
+            const backdrop = document.getElementById('addRequestModalBackdrop');
+            const wrapper = document.getElementById('addRequestModalWrapper');
+            
+            if (closeBtn) {
+                closeBtn.addEventListener('click', closeAddRequestModal);
+            } else {
+                console.error('Close button not found');
+            }
+
+            if (backdrop) {
+                backdrop.addEventListener('click', closeAddRequestModal);
+            } else {
+                console.error('Backdrop not found');
+            }
+            
+            if (wrapper) {
+                wrapper.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        closeAddRequestModal();
+                    }
+                });
+            } else {
+                console.error('Wrapper not found');
+            }
+            
+            // Change Request Options Modal Event Listeners
+            const changeRequestOptionsCloseBtn = document.getElementById('closeChangeRequestOptionsModal');
+            const changeRequestOptionsBackdrop = document.getElementById('changeRequestOptionsModalBackdrop');
+            const changeRequestOptionsWrapper = document.getElementById('changeRequestOptionsModalWrapper');
+            
+            if (changeRequestOptionsCloseBtn) {
+                changeRequestOptionsCloseBtn.addEventListener('click', closeChangeRequestOptionsModal);
+            }
+
+            if (changeRequestOptionsBackdrop) {
+                changeRequestOptionsBackdrop.addEventListener('click', closeChangeRequestOptionsModal);
+            }
+            
+            if (changeRequestOptionsWrapper) {
+                changeRequestOptionsWrapper.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        closeChangeRequestOptionsModal();
+                    }
+                });
+            }
+        });
+
+        // Close modal with ESC key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const addRequestModal = document.getElementById('addRequestModal');
+                const changeRequestOptionsModal = document.getElementById('changeRequestOptionsModal');
+                
+                if (changeRequestOptionsModal && !changeRequestOptionsModal.classList.contains('hidden')) {
+                    closeChangeRequestOptionsModal();
+                } else if (addRequestModal && !addRequestModal.classList.contains('hidden')) {
+                    closeAddRequestModal();
+                }
+            }
+        });
+
+        // Assign Request Modal Functions
+        function showAssignRequestModal(toolId) {
+            const modal = document.getElementById('assignRequestModal');
+            const toolIdInput = document.getElementById('assignRequestToolId');
+            
+            // Set tool ID
+            toolIdInput.value = toolId;
+            
+            // Load available requests
+            loadAvailableRequests();
+            
+            // Show modal
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                document.getElementById('assignRequestModalContent').classList.remove('scale-95');
+            }, 10);
+        }
+
+        function closeAssignRequestModal() {
+            const modal = document.getElementById('assignRequestModal');
+            modal.classList.add('opacity-0');
+            document.getElementById('assignRequestModalContent').classList.add('scale-95');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                // Reset form
+                document.getElementById('assignRequestForm').reset();
+                document.getElementById('selectedRequestDetails').innerHTML = '<p>No request selected</p>';
+            }, 300);
+        }
+
+        function loadAvailableRequests() {
+            const select = document.getElementById('availableRequestsSelect');
+            
+            // Clear existing options except first one
+            select.innerHTML = '<option value="">Loading...</option>';
+            
+            console.log('Loading available requests...');
+            
+            // Fetch available requests
+            fetch('/admin/api/requests', {
+                method: 'GET',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+            .then(response => {
+                console.log('Response status:', response.status);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('API Response:', data);
+                
+                // Clear loading option
+                select.innerHTML = '<option value="">Choose existing request...</option>';
+                
+                if (data.success && data.requests && data.requests.length > 0) {
+                    console.log(`Found ${data.requests.length} requests`);
+                    data.requests.forEach(request => {
+                        const option = document.createElement('option');
+                        option.value = request.id_req;
+                        option.textContent = `${request.no_surat} - ${request.type_surat} (${request.jenis_req})`;
+                        option.dataset.requestData = JSON.stringify(request);
+                        select.appendChild(option);
+                    });
+                } else {
+                    console.log('No requests found or API error');
+                    const option = document.createElement('option');
+                    option.value = '';
+                    option.textContent = 'No available requests found';
+                    option.disabled = true;
+                    select.appendChild(option);
+                }
+            })
+            .catch(error => {
+                console.error('Error loading requests:', error);
+                select.innerHTML = '<option value="">Choose existing request...</option>';
+                
+                const option = document.createElement('option');
+                option.value = '';
+                option.textContent = 'Error loading requests';
+                option.disabled = true;
+                select.appendChild(option);
+            });
+        }
+
+        // Handle request selection change
+        document.addEventListener('DOMContentLoaded', function() {
+            const requestSelect = document.getElementById('availableRequestsSelect');
+            const detailsDiv = document.getElementById('selectedRequestDetails');
+            
+            requestSelect.addEventListener('change', function() {
+                const selectedOption = this.options[this.selectedIndex];
+                
+                if (selectedOption.value && selectedOption.dataset.requestData) {
+                    const requestData = JSON.parse(selectedOption.dataset.requestData);
+                    
+                    detailsDiv.innerHTML = `
+                        <div class="space-y-1">
+                            <p><strong>No. Surat:</strong> ${requestData.no_surat}</p>
+                            <p><strong>Type:</strong> ${requestData.type_surat}</p>
+                            <p><strong>Jenis:</strong> ${requestData.jenis_req}</p>
+                            <p><strong>Tanggal:</strong> ${requestData.date_req}</p>
+                            <p><strong>Status:</strong> <span class="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800">${requestData.status_req}</span></p>
+                        </div>
+                    `;
+                } else {
+                    detailsDiv.innerHTML = '<p>No request selected</p>';
+                }
+            });
+        });
+
+        // Handle assign request form submission
+        document.getElementById('assignRequestForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            
+            fetch(this.action, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast(data.success, 'success');
+                    closeAssignRequestModal();
+                    location.reload();
+                } else {
+                    showToast(data.error || 'An error occurred', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('An error occurred while assigning request', 'error');
+            });
+        });
+
+        // Event listeners for assign/change request buttons
+        document.addEventListener('DOMContentLoaded', function() {
+            // Assign request buttons
+            document.querySelectorAll('.assign-request-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const toolId = this.dataset.toolId;
+                    showAssignRequestModal(toolId);
+                });
+            });
+
+            // Change request buttons
+            document.querySelectorAll('.change-request-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const toolId = this.dataset.toolId;
+                    const currentRequestId = this.dataset.currentRequest;
+                    
+                    // Store tool ID globally for use in change options
+                    window.currentChangeToolId = toolId;
+                    window.currentChangeRequestId = currentRequestId;
+                    
+                    showChangeRequestOptionsModal();
+                });
+            });
+        });
+    </script>
 </x-app-layout>

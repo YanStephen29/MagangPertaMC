@@ -9,24 +9,16 @@ use Illuminate\Support\Facades\Auth;
 
 class AdminManagementController extends Controller
 {
-    /**
-     * Display a listing of the admins
-     */
     public function index()
     {
         $admins = Admin::orderBy('created_at', 'desc')->paginate(10);
         return view('admin.management.index', compact('admins'));
     }
 
-    /**
-     * Show the form for creating a new admin
-     */
     public function create()
     {
-        // Get privilege groups from Admin model
         $privilegeGroups = Admin::PRIVILEGE_GROUPS;
         
-        // Build available privileges array from groups
         $availablePrivileges = [];
         foreach ($privilegeGroups as $groupData) {
             foreach ($groupData['privileges'] as $privilege) {
@@ -41,20 +33,22 @@ class AdminManagementController extends Controller
             'Admin' => [
                 'project_view', 'project_add', 'project_edit', 'project_delete', 'project_assign',
                 'tools_view', 'tools_add', 'tools_edit', 'tools_delete',
-                'kode_bidang_view', 'kode_bidang_add', 'kode_bidang_edit', 'kode_bidang_delete',
+                'kode_bidang_view', 'kode_bidang_add', 'kode_bidang_edit', 'kode_bidang_delete', 'kode_bidang_view',
                 'document_view', 'document_add', 'document_edit', 'document_delete',
+                'document_request_create', 'document_request_assign', 'document_request_status_update',
                 'boq_view', 'boq_add', 'boq_edit', 'boq_delete', 'boq_assign',
                 'boq_section_view', 'boq_section_add', 'boq_section_edit', 'boq_section_delete',
                 'boq_detail_view', 'boq_detail_add', 'boq_detail_edit', 'boq_detail_delete',
-                'account_view', 'account_add', 'account_edit', 'account_delete'
+                'account_view', 'account_add', 'account_edit', 'account_delete','hold_request_view', 'hold_request_update'
             ],
             'VP' => [
-                'project_view', 'tools_view', 'document_view', 'boq_view', 'boq_section_view', 'boq_detail_view'
+                'project_view', 'tools_view', 'kode_bidang_view', 'document_view', 'document_request_create', 'document_request_assign', 'document_request_status_update', 'boq_view', 'boq_section_view', 'boq_detail_view'
             ],
             'Manager Construction' => [
                 'project_view', 'project_add', 'project_edit', 'project_assign',
                 'tools_view', 'tools_add', 'tools_edit',
                 'document_view', 'document_add', 'document_edit',
+                'document_request_create', 'document_request_assign', 'document_request_status_update',
                 'boq_view', 'boq_add', 'boq_edit', 'boq_assign',
                 'boq_section_view', 'boq_section_add', 'boq_section_edit',
                 'boq_detail_view', 'boq_detail_add', 'boq_detail_edit'
@@ -63,14 +57,16 @@ class AdminManagementController extends Controller
                 'project_view', 'project_edit', 'project_assign',
                 'tools_view', 'tools_add', 'tools_edit', 'tools_delete',
                 'document_view', 'document_edit',
+                'document_request_create', 'document_request_assign', 'document_request_status_update',
                 'boq_view', 'boq_edit', 'boq_assign',
                 'boq_section_view', 'boq_section_add', 'boq_section_edit', 'boq_section_delete',
-                'boq_detail_view', 'boq_detail_add', 'boq_detail_edit', 'boq_detail_delete'
+                'boq_detail_view', 'boq_detail_add', 'boq_detail_edit', 'boq_detail_delete','hold_request_view'
             ],
             'Project Control' => [
                 'project_view',
                 'tools_view', 'tools_edit',
                 'document_view', 'document_edit',
+                'document_request_create', 'document_request_assign', 'document_request_status_update',
                 'boq_view', 'boq_section_view', 'boq_section_edit',
                 'boq_detail_view', 'boq_detail_add', 'boq_detail_edit'
             ],
@@ -86,9 +82,6 @@ class AdminManagementController extends Controller
         return view('admin.management.create', compact('availablePrivileges', 'roleTemplates'));
     }
 
-    /**
-     * Store a newly created admin in storage
-     */
     public function store(Request $request)
     {
         $request->validate([
@@ -101,7 +94,7 @@ class AdminManagementController extends Controller
 
         $admin = Admin::create([
             'username' => $request->username,
-            'password' => $request->password, // Store as plain text as per requirement
+            'password' => $request->password,
             'role' => $request->role,
             'privilege' => $request->privilege
         ]);
@@ -110,51 +103,43 @@ class AdminManagementController extends Controller
                         ->with('success', "Admin {$admin->username} berhasil didaftarkan dengan role {$admin->role}");
     }
 
-    /**
-     * Display the specified admin
-     */
     public function show(Admin $admin)
     {
         return view('admin.management.show', compact('admin'));
     }
 
-    /**
-     * Show the form for editing the specified admin
-     */
     public function edit(Admin $admin)
     {
-        // Get privilege groups from Admin model
         $privilegeGroups = Admin::PRIVILEGE_GROUPS;
         
-        // Build available privileges array from groups
         $availablePrivileges = [];
         foreach ($privilegeGroups as $groupData) {
             foreach ($groupData['privileges'] as $privilege) {
-                // Create readable labels from keys
                 $label = ucwords(str_replace('_', ' ', $privilege));
                 $availablePrivileges[$privilege] = $label;
             }
         }
 
-        // Define role templates with new privilege structure
         $roleTemplates = [
             'Admin' => [
                 'project_view', 'project_add', 'project_edit', 'project_delete', 'project_assign',
                 'tools_view', 'tools_add', 'tools_edit', 'tools_delete',
-                'kode_bidang_view', 'kode_bidang_add', 'kode_bidang_edit', 'kode_bidang_delete',
+                'kode_bidang_view', 'kode_bidang_add', 'kode_bidang_edit', 'kode_bidang_delete', 'kode_bidang_view',
                 'document_view', 'document_add', 'document_edit', 'document_delete',
+                'document_request_create', 'document_request_assign', 'document_request_status_update',
                 'boq_view', 'boq_add', 'boq_edit', 'boq_delete', 'boq_assign',
                 'boq_section_view', 'boq_section_add', 'boq_section_edit', 'boq_section_delete',
                 'boq_detail_view', 'boq_detail_add', 'boq_detail_edit', 'boq_detail_delete',
                 'account_view', 'account_add', 'account_edit', 'account_delete'
             ],
             'VP' => [
-                'project_view', 'tools_view', 'document_view', 'boq_view', 'boq_section_view', 'boq_detail_view'
+                'project_view', 'tools_view', 'document_view', 'document_request_create', 'document_request_assign', 'document_request_status_update', 'boq_view', 'boq_section_view', 'boq_detail_view'
             ],
             'Manager Construction' => [
                 'project_view', 'project_add', 'project_edit', 'project_assign',
                 'tools_view', 'tools_add', 'tools_edit',
                 'document_view', 'document_add', 'document_edit',
+                'document_request_create', 'document_request_assign', 'document_request_status_update',
                 'boq_view', 'boq_add', 'boq_edit', 'boq_assign',
                 'boq_section_view', 'boq_section_add', 'boq_section_edit',
                 'boq_detail_view', 'boq_detail_add', 'boq_detail_edit'
@@ -163,6 +148,7 @@ class AdminManagementController extends Controller
                 'project_view', 'project_edit', 'project_assign',
                 'tools_view', 'tools_add', 'tools_edit', 'tools_delete',
                 'document_view', 'document_edit',
+                'document_request_create', 'document_request_assign', 'document_request_status_update',
                 'boq_view', 'boq_edit', 'boq_assign',
                 'boq_section_view', 'boq_section_add', 'boq_section_edit', 'boq_section_delete',
                 'boq_detail_view', 'boq_detail_add', 'boq_detail_edit', 'boq_detail_delete'
@@ -171,6 +157,7 @@ class AdminManagementController extends Controller
                 'project_view',
                 'tools_view', 'tools_edit',
                 'document_view', 'document_edit',
+                'document_request_create', 'document_request_assign', 'document_request_status_update',
                 'boq_view', 'boq_section_view', 'boq_section_edit',
                 'boq_detail_view', 'boq_detail_add', 'boq_detail_edit'
             ],
@@ -186,12 +173,8 @@ class AdminManagementController extends Controller
         return view('admin.management.edit', compact('admin', 'availablePrivileges', 'roleTemplates'));
     }
 
-    /**
-     * Update the specified admin in storage
-     */
     public function update(Request $request, Admin $admin)
     {
-        // All admins now have full access, no need to check privileges
         $request->validate([
             'username' => 'required|string|max:20|unique:admins,username,' . $admin->admin_id . ',admin_id',
             'password' => 'nullable|string|min:6|max:8',
@@ -206,7 +189,6 @@ class AdminManagementController extends Controller
             'privilege' => $request->privilege
         ];
 
-        // Only update password if provided
         if ($request->filled('password')) {
             $updateData['password'] = $request->password;
         }
@@ -217,14 +199,10 @@ class AdminManagementController extends Controller
                         ->with('success', "Admin {$admin->username} berhasil diupdate");
     }
 
-    /**
-     * Remove the specified admin from storage
-     */
     public function destroy(Admin $admin)
     {
         $currentAdmin = Auth::guard('admin')->user();
         
-        // Prevent self-deletion only (all admins now have delete privileges)
         if ($admin->admin_id === $currentAdmin->admin_id) {
             return redirect()->back()->with('error', 'Tidak dapat menghapus akun sendiri');
         }

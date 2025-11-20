@@ -16,12 +16,18 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next, string $privileges = null): Response
     {
+        \Log::info('=== AdminMiddleware called ===');
+        \Log::info('Request URL: ' . $request->fullUrl());
+        \Log::info('Required privileges: ' . $privileges);
+        
         // Check if admin is authenticated
         if (!Auth::guard('admin')->check()) {
+            \Log::info('Admin not authenticated, redirecting to login');
             return redirect()->route('admin.login');
         }
 
         $admin = Auth::guard('admin')->user();
+        \Log::info('Admin authenticated: ' . $admin->username . ' (Role: ' . $admin->role . ')');
 
         // If specific privileges are required, check them
         if ($privileges) {
@@ -46,8 +52,11 @@ class AdminMiddleware
             }
             
             if (!$hasRequiredPrivilege) {
+                \Log::warning('Access denied - Admin does not have required privileges: ' . $privileges);
                 abort(403, 'Unauthorized. You do not have any of the required privileges: ' . $privileges);
             }
+            
+            \Log::info('Admin has required privileges, allowing access');
         }
 
         return $next($request);

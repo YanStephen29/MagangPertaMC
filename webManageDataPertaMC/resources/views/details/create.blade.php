@@ -3,7 +3,7 @@
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center">
             <div>
                 <h2 class="font-semibold text-lg sm:text-xl text-gray-800 leading-tight">
-                    🔧 Tambah Detail Baru
+                    🔧 Add New Detail
                 </h2>
                 <p class="text-sm text-gray-600 mt-1">
                     Section: {{ $section->nama }} | BOQ: {{ $section->boq->nomorBoq }} | {{ $project->title_project }}
@@ -14,7 +14,7 @@
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                     </svg>
-                    Kembali ke Details
+                    Back to Details
                 </a>
             </div>
         </div>
@@ -24,15 +24,7 @@
         <div class="w-full px-3 sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg border border-gray-200">
                 <div class="p-6">
-                    @if($errors->any())
-                        <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md mb-6">
-                            <ul class="list-disc list-inside">
-                                @foreach($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
+
 
                     <form action="{{ route('sections.details.store', [$project, $section]) }}" method="POST" class="space-y-6" id="detailForm">
                         @csrf
@@ -48,13 +40,13 @@
                                    value="{{ $section->details()->count() + 1 }}"
                                    readonly
                                    class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm bg-gray-50 text-gray-600 cursor-not-allowed">
-                            <p class="text-sm text-gray-600 mt-1">Nomor urut detail dalam section ini</p>
+                            <p class="text-sm text-gray-600 mt-1">Detailed sequence number in this section</p>
                         </div>
 
                         <!-- Detail Name -->
                         <div>
                             <label for="nama_detail" class="block text-sm font-medium text-gray-700 mb-2">
-                                📝 Nama Detail <span class="text-red-500">*</span>
+                                📝 Detail Name <span class="text-red-500">*</span>
                             </label>
                             <input type="text" 
                                    name="nama_detail" 
@@ -67,7 +59,7 @@
                             @error('nama_detail')
                                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                             @enderror
-                            <p class="text-sm text-gray-600 mt-1">Maksimal 45 karakter</p>
+                            <p class="text-sm text-gray-600 mt-1">Maximal 45 characters</p>
                         </div>
 
                         <!-- Parent Selection -->
@@ -78,12 +70,12 @@
                             <select name="parent_no" 
                                     id="parent_no" 
                                     class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500">
-                                <option value="">-- Tidak ada parent (Root Level) --</option>
+                                <option value="">-- No parent (Root Level) --</option>
                                 @foreach($potentialParents as $parent)
                                     <option value="{{ $parent->no }}" {{ old('parent_no', $parentDetail?->no) == $parent->no ? 'selected' : '' }}>
                                         {{ $parent->nama_detail }} (ID: {{ $parent->no }})
                                         @if($parent->parent)
-                                            - Sub dari: {{ $parent->parent->nama_detail }}
+                                            - Sub from: {{ $parent->parent->nama_detail }}
                                         @endif
                                     </option>
                                 @endforeach
@@ -91,7 +83,7 @@
                             @error('parent_no')
                                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                             @enderror
-                            <p class="text-sm text-gray-600 mt-1">Pilih parent jika ini adalah sub-detail dari item lain</p>
+                            <p class="text-sm text-gray-600 mt-1">Choose parent if this is a sub-detail of another item</p>
                         </div>
 
                         <!-- Quantity and Unit -->
@@ -134,7 +126,7 @@
                         <!-- Price -->
                         <div>
                             <label for="harga_satuan" class="block text-sm font-medium text-gray-700 mb-2">
-                                💰 Harga Satuan <span class="text-red-500">*</span>
+                                💰 Price/Unit <span class="text-red-500">*</span>
                             </label>
                             <div class="relative">
                                 <span class="absolute left-3 top-2 text-gray-500">Rp</span>
@@ -149,24 +141,24 @@
                             @error('harga_satuan')
                                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                             @enderror
-                            <p class="text-sm text-gray-600 mt-1">Harga total akan dihitung otomatis: Quantity × Harga Satuan</p>
+                            <p class="text-sm text-gray-600 mt-1">Total price will be calculated automatically: Quantity × Price/Unit</p>
                         </div>
 
                         <!-- Note -->
                         <div>
                             <label for="note" class="block text-sm font-medium text-gray-700 mb-2">
-                                📝 Catatan <span class="text-gray-500">(Optional)</span>
+                                📝 Note <span class="text-gray-500">(Optional)</span>
                             </label>
                             <textarea name="note" 
                                       id="note" 
                                       rows="3"
-                                      placeholder="Tambahkan catatan atau keterangan tambahan untuk detail ini..."
+                                      placeholder="Add notes or additional information for this detail..."
                                       class="w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 resize-vertical"
                                       maxlength="1000">{{ old('note') }}</textarea>
                             @error('note')
                                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                             @enderror
-                            <p class="text-sm text-gray-600 mt-1">Maksimal 1000 karakter</p>
+                            <p class="text-sm text-gray-600 mt-1">Maximal 1000 characters</p>
                         </div>
 
                         <!-- Information Box -->
@@ -176,14 +168,14 @@
                                     <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
                                 </svg>
                                 <div class="ml-3">
-                                    <h3 class="text-sm font-medium text-blue-800">Informasi</h3>
+                                    <h3 class="text-sm font-medium text-blue-800">Information</h3>
                                     <div class="mt-2 text-sm text-blue-700">
                                         <ul class="list-disc list-inside space-y-1">
-                                            <li>Detail akan ditambahkan ke section: <strong>{{ $section->nama }}</strong></li>
-                                            <li>Isi semua informasi detail termasuk quantity, unit, dan harga</li>
-                                            <li>Catatan bersifat opsional untuk informasi tambahan</li>
+                                            <li>Detail will be added to section: <strong>{{ $section->nama }}</strong></li>
+                                            <li>Fill in all detail information including quantity, unit, and price</li>
+                                            <li>Notes are optional for additional information</li>
                                             @if($parentDetail)
-                                                <li>Detail ini akan menjadi sub-item dari: <strong>{{ $parentDetail->nama_detail }}</strong></li>
+                                                <li>This detail will be a sub-item of: <strong>{{ $parentDetail->nama_detail }}</strong></li>
                                             @endif
                                         </ul>
                                     </div>
@@ -195,7 +187,7 @@
                         <div class="flex flex-col sm:flex-row justify-between gap-4">
                             <a href="{{ route('sections.details.index', [$project, $section]) }}" 
                                class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-2 rounded-md transition-colors duration-200 text-center">
-                                Batal
+                                Cancel
                             </a>
                             
                             <button type="submit" 
@@ -203,7 +195,7 @@
                                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                                 </svg>
-                                Simpan Detail
+                                Save Detail
                             </button>
                         </div>
                     </form>

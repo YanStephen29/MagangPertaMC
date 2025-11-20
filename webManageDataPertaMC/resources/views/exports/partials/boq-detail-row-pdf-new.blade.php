@@ -4,16 +4,16 @@
     
     // Add visual indicators for better hierarchy display in PDF
     $indentPrefix = match($level) {
-        1 => '• ',          // Level 1: bullet
-        2 => '◦ ',          // Level 2: hollow bullet  
-        3 => '▪ ',          // Level 3: small square
-        4 => '- ',          // Level 4: dash
+        1 => ' ',
+        2 => ' ',  
+        3 => ' ',
+        4 => ' ',
         default => ''
     };
 @endphp
 
 <tr class="{{ $rowClass }}">
-    <td class="text-left number-col">{{ $displayNumber }}</td>
+    <td class="{{ $indentClass }}">{{ $indentPrefix }}{{ $displayNumber }}</td>
     <td class="{{ $indentClass }}">{{ $indentPrefix }}{{ $detail->nama_detail }}</td>
     <td>{{ $detail->note ?? '' }}</td>
     <td class="text-center">{{ $detail->quantity ?? '' }}</td>

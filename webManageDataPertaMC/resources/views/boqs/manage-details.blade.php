@@ -6,7 +6,7 @@
                     <svg class="w-7 h-7 mr-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
                     </svg>
-                    Kelola Detail BOQ
+                    Manage Detail BOQ
                 </h2>
                 <div class="mt-2 flex flex-col sm:flex-row sm:items-center gap-2 text-sm text-gray-600">
                     <span class="flex items-center">
@@ -36,7 +36,7 @@
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                     </svg>
-                    <span>Kembali ke BOQ</span>
+                    <span>Back to BOQ</span>
                 </a>
             </div>
         </div>
@@ -142,19 +142,42 @@
                                     </svg>
                                 </button>
 
-                                <div id="downloadMenu" class="hidden origin-top-right absolute right-0 mt-2 w-48 rounded-lg shadow-xl bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
+                                <div id="downloadMenu" class="hidden origin-top-right absolute right-0 mt-2 w-56 rounded-lg shadow-xl bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
                                     <div class="py-1">
-                                        <a href="{{ route('projects.boq.download.excel', [$project, $boq]) }}" class="group flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-green-50 hover:text-green-800 transition-colors duration-200">
+                                        <!-- Excel Options -->
+                                        <div class="px-4 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">Excel Format</div>
+                                        <a href="{{ route('projects.boq.download.excel.boq-only', [$project, $boq]) }}" class="group flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-green-50 hover:text-green-800 transition-colors duration-200">
                                             <svg class="w-4 h-4 mr-3 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                                             </svg>
-                                            Download Excel
+                                            <div>
+                                                <div class="font-medium">BoQ Only</div>
+                                                <div class="text-xs text-gray-500">Basic BOQ data</div>
+                                            </div>
                                         </a>
+                                        <a href="{{ route('projects.boq.download.excel.boq-with-actual', [$project, $boq]) }}" class="group flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-800 transition-colors duration-200">
+                                            <svg class="w-4 h-4 mr-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                            </svg>
+                                            <div>
+                                                <div class="font-medium">BoQ With Actual</div>
+                                                <div class="text-xs text-gray-500">BOQ with usage data and remaining funds</div>
+                                            </div>
+                                        </a>
+                                        
+                                        <!-- Divider -->
+                                        <div class="border-t border-gray-100 my-1"></div>
+                                        
+                                        <!-- PDF Option -->
+                                        <div class="px-4 py-2 text-xs font-medium text-gray-500 uppercase tracking-wider">PDF Format</div>
                                         <a href="{{ route('projects.boq.download.pdf', [$project, $boq]) }}" class="group flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-red-800 transition-colors duration-200">
                                             <svg class="w-4 h-4 mr-3 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                                             </svg>
-                                            Download PDF
+                                            <div>
+                                                <div class="font-medium">Download PDF</div>
+                                                <div class="text-xs text-gray-500">Printable format</div>
+                                            </div>
                                         </a>
                                     </div>
                                 </div>
@@ -172,8 +195,10 @@
                                         <th class="px-6 py-3 text-left text-xs font-bold text-red-700 uppercase tracking-wider border-r border-gray-200">Note</th>
                                         <th class="px-6 py-3 text-right text-xs font-bold text-red-700 uppercase tracking-wider border-r border-gray-200">Quantity</th>
                                         <th class="px-6 py-3 text-center text-xs font-bold text-red-700 uppercase tracking-wider border-r border-gray-200">Unit</th>
-                                        <th class="px-6 py-3 text-right text-xs font-bold text-red-700 uppercase tracking-wider border-r border-gray-200">Harga Satuan</th>
-                                        <th class="px-6 py-3 text-right text-xs font-bold text-red-700 uppercase tracking-wider">Total Biaya</th>
+                                        <th class="px-6 py-3 text-right text-xs font-bold text-red-700 uppercase tracking-wider border-r border-gray-200">Price/Unit</th>
+                                        <th class="px-6 py-3 text-right text-xs font-bold text-red-700 uppercase tracking-wider border-r border-gray-200">Total Cost</th>
+                                        <th class="px-6 py-3 text-right text-xs font-bold text-orange-700 uppercase tracking-wider border-r border-gray-200">Qty Used</th>
+                                        <th class="px-6 py-3 text-right text-xs font-bold text-purple-700 uppercase tracking-wider">Remaining Funds</th>
                                     </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-100">
@@ -216,6 +241,25 @@
                                                 <div class="text-sm font-medium text-green-600">
                                                     {{ $section->formatted_total_harga }}
                                                 </div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-right border-r border-gray-200">
+                                                @php
+                                                    $sectionUsedQuantity = 0;
+                                                    $allDetails = $boq->getAllDetailsFromSection($section);
+
+                                                    foreach($allDetails as $sectionDetail) {
+                                                        $sectionUsedQuantity += $sectionDetail->getActualUsedQuantity();
+                                                    }
+                                                @endphp
+                                                <span class="text-sm font-medium text-orange-600">{{ number_format($sectionUsedQuantity, 0) }}</span>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-right">
+                                                @php
+                                                    $remainingFunds = $section->getTotalRemainingFunds();
+                                                @endphp
+                                                <span class="text-sm font-medium {{ $remainingFunds < 0 ? 'text-red-600' : 'text-purple-600' }}">
+                                                    Rp {{ number_format($remainingFunds, 0, ',', '.') }}
+                                                </span>
                                             </td>
                                         </tr>
 

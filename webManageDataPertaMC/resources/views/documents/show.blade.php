@@ -15,7 +15,7 @@
                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                     </svg>
-                    Kembali
+                    Back To List Documents
                 </a>
             </div>
         </div>
@@ -28,14 +28,14 @@
                     <!-- Document Info -->
                     <div class="mb-6">
                         <div class="bg-gradient-to-r from-purple-50 to-blue-50 p-6 rounded-lg border border-purple-200">
-                            <h3 class="text-xl font-bold text-purple-800 mb-4">📄 Informasi Document</h3>
+                            <h3 class="text-xl font-bold text-purple-800 mb-4">📄 Document Information</h3>
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <div>
                                     <label class="block text-sm font-medium text-gray-700 mb-1">No Request</label>
                                     <p class="text-lg font-semibold text-purple-600">{{ $document->no_request }}</p>
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Jenis Request</label>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Type Request</label>
                                     <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium
                                         @if($document->jenis_request == 'Material Request')
                                             bg-green-100 text-green-800
@@ -44,14 +44,14 @@
                                         @elseif($document->jenis_request == 'Facility Request')
                                             bg-purple-100 text-purple-800
                                         @else
-                                            bg-orange-100 text-orange-800
+                                            bg-orange-100 text-orange-800 == 'Aset Request'
                                         @endif
                                     ">
                                         {{ $document->jenis_request }}
                                     </span>
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Issue</label>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Date Issue</label>
                                     <p class="text-sm text-gray-900">{{ $document->date_issue->format('d F Y') }}</p>
                                 </div>
                             </div>
@@ -69,10 +69,7 @@
                         <div class="bg-gradient-to-r from-indigo-50 to-cyan-50 p-6 rounded-lg border border-indigo-200">
                             <div class="flex justify-between items-center mb-6">
                                 <h3 class="text-xl font-bold text-indigo-800 flex items-center">
-                                    <svg class="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                    </svg>
-                                    🎯 Timeline Tahapan Progress
+                                    🎯 Progress Stage Timeline
                                 </h3>
                                 <div class="text-right">
                                     <div class="text-xs text-gray-600 mb-1">Progress</div>
@@ -100,8 +97,9 @@
                                 @foreach($allSteps as $index => $stepName)
                                     @php
                                         $tahapan = $document->tahapans->where('namaTahapan', $stepName)->first();
-                                        $isCompleted = $tahapan && $tahapan->Date_Tahapan;
-                                        $isCurrent = $tahapan && !$tahapan->Date_Tahapan;
+                                        // BELUM DI PROSES is always completed when it exists (since it's created with the document)
+                                        $isCompleted = $tahapan && ($tahapan->Date_Tahapan || $stepName === 'BELUM DI PROSES');
+                                        $isCurrent = $tahapan && !$tahapan->Date_Tahapan && $stepName !== 'BELUM DI PROSES';
                                         $isPending = !$tahapan;
                                     @endphp
                                     
@@ -177,16 +175,33 @@
                             <!-- Summary Stats -->
                             <div class="mt-6 pt-6 border-t border-indigo-200">
                                 <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+                                    @php
+                                        $allSteps = ['BELUM DI PROSES', 'PROJECT TO EPC (EPC PROCESS)', 'PMO TO EPC', 'EPC TO PROCUREMENT'];
+                                        $completedCount = 0;
+                                        $inProgressCount = 0;
+                                        $pendingCount = 0;
+                                        
+                                        foreach($allSteps as $stepName) {
+                                            $tahapan = $document->tahapans->where('namaTahapan', $stepName)->first();
+                                            $isCompleted = $tahapan && ($tahapan->Date_Tahapan || $stepName === 'BELUM DI PROSES');
+                                            $isCurrent = $tahapan && !$tahapan->Date_Tahapan && $stepName !== 'BELUM DI PROSES';
+                                            $isPending = !$tahapan;
+                                            
+                                            if ($isCompleted) $completedCount++;
+                                            elseif ($isCurrent) $inProgressCount++;
+                                            elseif ($isPending) $pendingCount++;
+                                        }
+                                    @endphp
                                     <div class="text-center">
-                                        <div class="text-2xl font-bold text-green-600">{{ $document->tahapans->where('Date_Tahapan', '!=', null)->count() }}</div>
+                                        <div class="text-2xl font-bold text-green-600">{{ $completedCount }}</div>
                                         <div class="text-xs text-gray-600">Completed</div>
                                     </div>
                                     <div class="text-center">
-                                        <div class="text-2xl font-bold text-yellow-600">{{ $document->tahapans->where('Date_Tahapan', null)->count() }}</div>
+                                        <div class="text-2xl font-bold text-yellow-600">{{ $inProgressCount }}</div>
                                         <div class="text-xs text-gray-600">In Progress</div>
                                     </div>
                                     <div class="text-center">
-                                        <div class="text-2xl font-bold text-gray-600">{{ 4 - $document->tahapans->count() }}</div>
+                                        <div class="text-2xl font-bold text-gray-600">{{ $pendingCount }}</div>
                                         <div class="text-xs text-gray-600">Pending</div>
                                     </div>
                                     <div class="text-center">
@@ -205,17 +220,17 @@
                     </div>                    <!-- Related Tools -->
                     @if($document->tools->count() > 0)
                         <div class="mb-6">
-                            <h3 class="text-lg font-semibold text-gray-800 mb-4">🔧 Tools yang Menggunakan Document Ini ({{ $document->tools->count() }} items)</h3>
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4">🔧 Request Tools Included in This Document ({{ $document->tools->count() }} items)</h3>
                             <div class="overflow-x-auto -mx-3 sm:mx-0">
                                 <table class="min-w-full divide-y divide-gray-200">
                                     <thead class="bg-gradient-to-r from-green-50 to-blue-50">
                                         <tr>
                                             <th class="px-3 sm:px-6 py-3 sm:py-4 text-center text-xs font-bold text-green-700 uppercase tracking-wider border-r border-gray-200">No</th>
                                             <th class="px-3 sm:px-6 py-3 sm:py-4 text-center text-xs font-bold text-green-700 uppercase tracking-wider border-r border-gray-200">Project</th>
-                                            <th class="px-3 sm:px-6 py-3 sm:py-4 text-center text-xs font-bold text-green-700 uppercase tracking-wider border-r border-gray-200">Deskripsi</th>
+                                            <th class="px-3 sm:px-6 py-3 sm:py-4 text-center text-xs font-bold text-green-700 uppercase tracking-wider border-r border-gray-200">Description</th>
                                             <th class="px-3 sm:px-6 py-3 sm:py-4 text-center text-xs font-bold text-green-700 uppercase tracking-wider border-r border-gray-200">Quantity</th>
                                             <th class="px-3 sm:px-6 py-3 sm:py-4 text-center text-xs font-bold text-green-700 uppercase tracking-wider border-r border-gray-200">Unit</th>
-                                            <th class="px-3 sm:px-6 py-3 sm:py-4 text-center text-xs font-bold text-green-700 uppercase tracking-wider">Bidang</th>
+                                            <th class="px-3 sm:px-6 py-3 sm:py-4 text-center text-xs font-bold text-green-700 uppercase tracking-wider">GL Code</th>
                                         </tr>
                                     </thead>
                                     <tbody class="bg-white divide-y divide-gray-200">
@@ -264,8 +279,8 @@
                             <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
                             </svg>
-                            <h3 class="mt-2 text-sm font-medium text-gray-900">Belum ada tools</h3>
-                            <p class="mt-1 text-sm text-gray-500">Document ini belum memiliki tools yang terkait.</p>
+                            <h3 class="mt-2 text-sm font-medium text-gray-900">There Are No Request Tools Yet</h3>
+                            <p class="mt-1 text-sm text-gray-500">This document has no related tools requests.</p>
                         </div>
                     @endif
                 </div>

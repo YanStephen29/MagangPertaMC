@@ -1,7 +1,5 @@
-{{-- Manage Detail Row with Full Hierarchy - Shows all levels with proper indentation --}}
 @php
-    $indentLevel = ($level - 1) * 24; // 24px per level
-    // Use sequential numbering instead of database 'no' field for proper ordering
+    $indentLevel = ($level - 1) * 24;
     $currentNumber = $parentNumber ? $parentNumber . '.' . $detailIndex : $sectionIndex . '.' . $detailIndex;
 @endphp
 
@@ -15,7 +13,6 @@
     
     <td class="px-6 py-3 whitespace-nowrap border-r border-gray-200">
         <div class="flex items-center" style="padding-left: {{ $indentLevel }}px;">
-            {{-- Toggle button for children --}}
             @if($detail->children && $detail->children->count() > 0)
                 <button class="detail-toggle mr-3 p-1 text-gray-400 hover:text-red-600 hover:bg-red-100 rounded-full focus:outline-none transition-all duration-200"
                         data-current-number="{{ $currentNumber }}" data-section-id="{{ $sectionId }}">
@@ -27,7 +24,6 @@
                 <div class="w-6 mr-3"></div>
             @endif
             
-            {{-- Level indicator and numbering --}}
             <div class="flex items-center mr-3">
                 @if($level > 1)
                     <div class="flex items-center mr-2 text-gray-400">
@@ -77,10 +73,28 @@
         </div>
     </td>
     
-    <td class="px-6 py-3 whitespace-nowrap text-right">
+    <td class="px-6 py-3 whitespace-nowrap text-right border-r border-gray-200">
         <div class="text-sm font-medium text-green-600">
             {{ $detail->formatted_harga_total ?? '-' }}
         </div>
+    </td>
+    
+    <td class="px-6 py-3 whitespace-nowrap text-right border-r border-gray-200">
+        @php
+            $usedQuantity = $detail->getActualUsedQuantity();
+        @endphp
+        <div class="text-sm font-medium {{ $usedQuantity > 0 ? 'text-orange-600' : 'text-gray-500' }}">
+            {{ number_format($usedQuantity, 0) }}
+        </div>
+    </td>
+    
+    <td class="px-6 py-3 whitespace-nowrap text-right">
+        @php
+            $remainingFunds = $detail->getRemainingFunds();
+        @endphp
+        <span class="text-sm font-medium {{ $remainingFunds < 0 ? 'text-red-600' : 'text-purple-600' }}">
+            Rp {{ number_format($remainingFunds, 0, ',', '.') }}
+        </span>
     </td>
 </tr>
 

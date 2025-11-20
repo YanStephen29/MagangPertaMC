@@ -14,7 +14,7 @@
                         
                         <div class="mb-4">
                             <label for="kode_GL" class="block text-sm font-medium text-gray-700 mb-2">
-                                Kode GL *
+                                GL Code *
                             </label>
                             <input type="text" 
                                    name="kode_GL" 
@@ -27,7 +27,7 @@
 
                         <div class="mb-6">
                             <label for="nama_Bidang" class="block text-sm font-medium text-gray-700 mb-2">
-                                Nama Bidang *
+                                GL Name *
                             </label>
                             <input type="text" 
                                    name="nama_Bidang" 
@@ -40,10 +40,10 @@
 
                         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0">
                             <button type="submit" class="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold py-3 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-red-300 w-full sm:w-auto">
-                                💾 Simpan Bidang
+                                Save GL Code
                             </button>
                             <a href="{{ route('bidangs.index') }}" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg shadow-md transition-colors duration-200 w-full sm:w-auto text-center">
-                                ↩️ Batal
+                                Cancel
                             </a>
                         </div>
                     </form>

@@ -66,8 +66,49 @@ class Section extends Model
         // Also update BOQ total
         if ($this->boq) {
             $this->boq->updateTotalHarga();
+            // Auto-update status if needed
+            $this->boq->autoUpdateStatus();
         }
         
         return $total;
+    }
+
+    /**
+     * Check if admin can edit this section
+     */
+    public function canBeEdited($admin)
+    {
+        // Admin dan VP bisa edit semua section
+        if (in_array($admin->role, ['Admin', 'Vice President'])) {
+            return true;
+        }
+        
+        // Project Manager tidak bisa edit section jika BOQ sudah locked
+        if ($admin->role === 'Project Manager') {
+            $boq = $this->boq;
+            if ($boq && $boq->status === 'Locked') {
+                return false;
+            }
+            
+            // Cek apakah project di-assign ke PM ini
+            return $boq && $boq->project->assigned_to === $admin->admin_id;
+        }
+        
+        return false;
+    }
+
+    /**
+     * Check if admin can delete this section
+     */
+    public function canBeDeleted($admin)
+    {
+        // Same logic as edit
+        return $this->canBeEdited($admin);
+    }
+
+    public function getTotalRemainingFunds(){
+        return $this->rootDetails->sum(function ($detail) {
+            return $detail->getRemainingFunds();
+        });
     }
 }

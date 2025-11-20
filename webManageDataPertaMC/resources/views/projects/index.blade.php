@@ -31,11 +31,6 @@
                                 </svg>
                                 Add Project
                             </a>
-                        @else
-                            <button class="@privilegeButton('project_create', 'membuat project baru') bg-gray-400 text-white font-medium py-2 px-4 rounded-md inline-flex items-center text-sm">
-                                <i class="fas fa-lock w-4 h-4 mr-1"></i>
-                                Tambah Project
-                            </button>
                         @endcanAccess
                     </div>
                     
@@ -142,41 +137,35 @@
                                                             </button>
                                                         @endcanAccess
 
-                                                        <!-- BOQ Button - Only for Admin/PM -->
+                                                        <!-- BOQ Button - Only for Admin/PM with access -->
                                                         @if(auth()->guard('admin')->check() && in_array(auth()->guard('admin')->user()->role, ['Admin', 'Project Manager']))
-                                                            <a href="{{ route('projects.boq.index', $project) }}" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs">BOQ</a>
+                                                            @if($project->canAccessBOQ(auth()->guard('admin')->user()))
+                                                                <a href="{{ route('projects.boq.index', $project) }}" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs">BOQ</a>
+                                                            @endif
                                                         @endif
 
                                                         <!-- Assign Button - Only for Admin management -->
                                                         @canAccess('account_update')
                                                             <a href="{{ route('projects.assign.show', $project) }}" class="bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded text-xs">Assign</a>
-                                                        @else
-                                                            <button class="@privilegeButton('account_update', 'assign project ke user') bg-gray-400 text-white px-3 py-1 rounded text-xs">
-                                                                <i class="fas fa-lock mr-1"></i>Assign
-                                                            </button>
                                                         @endcanAccess
                                                         
                                                         <!-- Edit Button -->
                                                         @canAccess('project_update')
-                                                            <a href="{{ route('projects.edit', $project) }}" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs">Edit</a>
-                                                        @else
-                                                            <button class="@privilegeButton('project_update', 'mengedit project') bg-gray-400 text-white px-3 py-1 rounded text-xs">
-                                                                <i class="fas fa-lock mr-1"></i>Edit
-                                                            </button>
+                                                            @if($project->canBeManaged($admin))
+                                                                <a href="{{ route('projects.edit', $project) }}" class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs">Edit</a>
+                                                            @endif
                                                         @endcanAccess
                                                         
                                                         
                                                         <!-- Delete Button -->
                                                         @canAccess('project_delete')
-                                                            <button type="button" 
-                                                                    class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-xs"
-                                                                    onclick="openDeleteModal('{{ $project->no_IO }}', '{{ $project->title_project }}')">
-                                                                Delete
-                                                            </button>
-                                                        @else
-                                                            <button class="@privilegeButton('project_delete', 'menghapus project') bg-gray-400 text-white px-3 py-1 rounded text-xs">
-                                                                <i class="fas fa-lock mr-1"></i>Delete
-                                                            </button>
+                                                            @if($project->canBeManaged($admin))
+                                                                <button type="button" 
+                                                                        class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-xs"
+                                                                        onclick="openDeleteModal('{{ $project->no_IO }}', '{{ $project->title_project }}')">
+                                                                    Delete
+                                                                </button>
+                                                            @endif
                                                         @endcanAccess
                                                     </div>
                                                 </td>
@@ -188,7 +177,11 @@
         @else
             <!-- Empty Data State -->
             @if($projects->count() === 0 && !request('search'))
-                @emptyDataState('Tidak Ada Data Project', 'Anda tidak memiliki akses untuk melihat data project atau belum ada project yang dibuat.')
+                @if($admin->role === 'Project Manager')
+                    @emptyDataState('Tidak Ada Project yang Di-assign', 'Belum ada project yang di-assign kepada Anda oleh Admin. Hubungi Admin untuk mendapatkan assignment project.')
+                @else
+                    @emptyDataState('Tidak Ada Data Project', 'Belum ada project yang dibuat dalam sistem.')
+                @endif
             @else
                 <div class="text-center py-12">
                     <div class="text-6xl text-gray-300 mb-4">
@@ -384,7 +377,8 @@
                 actionButton.className = 'px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg';
                 actionButton.textContent = 'Buat BOQ';
                 actionButton.onclick = function() {
-                    window.location.href = '{{ url("/projects") }}/' + projectNoIO + '/boq/create';
+                    // Use Laravel route helper to generate correct URL
+                    window.location.href = '{{ route("projects.boq.create", ":projectId") }}'.replace(':projectId', projectNoIO);
                 };
             } else if (status === 'empty_boq') {
                 warningBox.className = 'bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4';
@@ -392,7 +386,8 @@
                 actionButton.className = 'px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg';
                 actionButton.textContent = 'Isi BOQ';
                 actionButton.onclick = function() {
-                    window.location.href = '{{ url("/projects") }}/' + projectNoIO + '/boq';
+                    // Use Laravel route helper to generate correct URL
+                    window.location.href = '{{ route("projects.boq.index", ":projectId") }}'.replace(':projectId', projectNoIO);
                 };
             }
             
