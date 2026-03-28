@@ -29,11 +29,7 @@
         <div class="w-full px-3 sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg border border-gray-200">
                 <div class="p-3 sm:p-6 text-gray-900">
-                    @if(session('error'))
-                        <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md mb-4">
-                            {{ session('error') }}
-                        </div>
-                    @endif
+                    <!-- Notifikasi sudah ditangani di layout utama (app.blade.php) -->
 
                     <div class="overflow-x-auto -mx-3 sm:mx-0">
                         <table class="min-w-full divide-y divide-gray-200">

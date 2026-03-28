@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Admin;
 
 class Project extends Model
 {
@@ -132,5 +133,70 @@ class Project extends Model
             'message' => 'BOQ valid dan siap untuk request.',
             'action' => 'proceed'
         ];
+    }
+
+    /**
+     * Check if admin can manage (edit/delete) this project
+     */
+    public function canBeManaged($admin)
+    {
+        // Admin dan VP bisa manage semua project
+        if (in_array($admin->role, ['Admin', 'VP'])) {
+            return true;
+        }
+        
+        // Project Manager hanya bisa manage project yang di-assign
+        if ($admin->role === 'Project Manager') {
+            return $this->assigned_to === $admin->admin_id;
+        }
+        
+        return false;
+    }
+
+    /**
+     * Check if admin can access BOQ for this project
+     */
+    public function canAccessBOQ(Admin $admin)
+    {
+        // Admin dan VP bisa akses semua BOQ
+        if (in_array($admin->role, ['Admin', 'VP'])) {
+            return true;
+        }
+        
+        // Project Manager hanya bisa akses BOQ project yang di-assign
+        if ($admin->role === 'Project Manager') {
+            return $this->assigned_to === $admin->admin_id;
+        }
+        
+        return false;
+    }
+
+    /**
+     * Check if admin can edit BOQ (considering lock status)
+     */
+    public function canEditBOQ($admin)
+    {
+        // Admin dan VP bisa edit semua BOQ
+        if (in_array($admin->role, ['Admin', 'VP'])) {
+            return true;
+        }
+        
+        // Project Manager hanya bisa edit jika project di-assign dan BOQ belum locked
+        if ($admin->role === 'Project Manager') {
+            // Harus di-assign ke PM ini
+            if ($this->assigned_to !== $admin->admin_id) {
+                return false;
+            }
+            
+            // Cek apakah BOQ locked
+            $boq = $this->boq;
+            if ($boq && $boq->status === 'Locked') {
+                return false; // PM tidak bisa edit BOQ yang sudah locked
+            }
+            
+            return true;
+        }
+        
+        return false;
     }
 }

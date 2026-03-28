@@ -85,9 +85,27 @@ class DocumentController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
-        return view('documents.create');
+        // Check if coming from Add Request modal
+        $fromAddRequest = $request->query('from_add_request', false);
+        $projectId = $request->query('project_id', null);
+        
+        // Store in session for use after document creation
+        if ($fromAddRequest && $projectId) {
+            session([
+                'from_add_request' => true,
+                'project_id' => $projectId
+            ]);
+        }
+        
+        // Pass context to view
+        $context = [
+            'from_add_request' => $fromAddRequest,
+            'project_id' => $projectId
+        ];
+        
+        return view('documents.create', $context);
     }
 
     /**
@@ -95,24 +113,94 @@ class DocumentController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'no_request' => 'required|string|max:255|unique:documents,no_request',
-            'jenis_request' => 'required|in:Material Request,Service Request,Facility Request,Aset',
-            'date_issue' => 'required|date',
-            'description' => 'nullable|string'
-        ]);
+        try {
+            \Log::info('Document store started', [
+                'from_add_request' => $request->input('from_add_request'),
+                'project_id' => $request->input('project_id'),
+                'session_from_add_request' => session('from_add_request'),
+                'session_project_id' => session('project_id')
+            ]);
 
-        $document = Document::create($validated);
+            $validated = $request->validate([
+                'no_request' => 'required|string|max:255|unique:documents,no_request',
+                'jenis_request' => 'required|in:Material Request,Service Request,Facility Request,Aset',
+                'date_issue' => 'required|date',
+                'description' => 'nullable|string'
+            ]);
 
-        // Create initial tahapan (BELUM DI PROSES)
-        Tahapan::create([
-            'no_request' => $document->no_request,
-            'namaTahapan' => Tahapan::TAHAPAN_BELUM_DIPROSES,
-            'Date_Tahapan' => null // Initially null
-        ]);
+            $document = Document::create($validated);
+            \Log::info('Document created', ['document_no' => $document->no_request]);
 
-        return redirect()->route('documents.index')
-            ->with('success', 'Document berhasil dibuat dengan nomor: ' . $validated['no_request']);
+            // Create initial tahapan (BELUM DI PROSES)
+            Tahapan::create([
+                'no_request' => $document->no_request,
+                'namaTahapan' => Tahapan::TAHAPAN_BELUM_DIPROSES,
+                'Date_Tahapan' => now() // Set current date when document is created
+            ]);
+
+            // Check if coming from Add Request workflow (from session or form data)
+            $fromAddRequest = session('from_add_request') || $request->filled('from_add_request');
+            $projectId = session('project_id') ?? $request->input('project_id');
+            
+            \Log::info('Checking workflow', [
+                'fromAddRequest' => $fromAddRequest,
+                'projectId' => $projectId
+            ]);
+            
+            if ($fromAddRequest && $projectId) {
+                \Log::info('Showing success modal for Add Request workflow', ['project' => $projectId]);
+                
+                // TODO: Create a Tool to link the document with the project (temporarily disabled)
+                // We'll focus on the main issue first - selectBoqItems method not being called
+                \Log::info('Skipping Tool creation for now - focusing on selectBoqItems method', [
+                    'project_id' => $projectId,
+                    'document_no' => $document->no_request
+                ]);
+                
+                // Store project_id in session for BOQ selection workflow (don't clear it yet)
+                session([
+                    'created_document_project_id' => $projectId,
+                    'project_id' => $projectId  // Keep this for BOQ selection
+                ]);
+                
+                // Clear only the add request flag, keep project_id for BOQ workflow
+                session()->forget(['from_add_request']);
+                
+                // Return back to create page with success modal data
+                return back()->with([
+                    'document_created_success' => true,
+                    'document_no' => $document->no_request,
+                    'project_id' => $projectId,
+                    'from_add_request' => true,
+                    'success' => 'Document berhasil dibuat dengan nomor: ' . $validated['no_request']
+                ]);
+            }
+
+            \Log::info('Redirecting to documents.index for regular workflow');
+            return redirect()->route('documents.index')
+                ->with('success', 'Document berhasil dibuat dengan nomor: ' . $validated['no_request']);
+                
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            \Log::error('Validation error in document store', ['errors' => $e->errors()]);
+            return back()->withErrors($e->errors())->withInput();
+        } catch (\Exception $e) {
+            \Log::error('Error in document store', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            return back()->with('error', 'Error creating document: ' . $e->getMessage())->withInput();
+        }
+    }
+
+    /**
+     * Show next step options after document creation
+     */
+    public function afterCreate($project)
+    {
+        $projectModel = \App\Models\Project::where('no_IO', $project)->firstOrFail();
+        $documentNo = session('new_document_no');
+        
+        return view('documents.after-create', compact('projectModel', 'documentNo'));
     }
 
     /**

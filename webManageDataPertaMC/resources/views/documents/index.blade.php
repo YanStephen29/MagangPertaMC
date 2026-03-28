@@ -113,11 +113,7 @@
                         </form>
                     </div>
 
-                    @if(session('error'))
-                        <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md mb-4">
-                            {{ session('error') }}
-                        </div>
-                    @endif
+                    <!-- Notifikasi sudah ditangani di layout utama (app.blade.php) -->
 
                     @if($documents->count() > 0)
                         <div class="overflow-x-auto -mx-3 sm:mx-0">

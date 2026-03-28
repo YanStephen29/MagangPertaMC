@@ -4,303 +4,208 @@
     <meta charset="utf-8">
     <title>BOQ - {{ $project->title_project }}</title>
     <style>
+
         @media print {
-            body { 
-                margin: 0; 
-                background: white !important;
+            body {
                 -webkit-print-color-adjust: exact;
                 color-adjust: exact;
             }
             .no-print { display: none; }
-            @page { 
-                margin: 2cm 1.5cm;
-                size: A4;
-            }
-            
-            .company-header {
-                page-break-inside: avoid;
-                break-inside: avoid;
-            }
-            
-            .section-row {
-                page-break-inside: avoid;
-                break-inside: avoid;
-            }
-            
-            table {
-                page-break-inside: auto;
-            }
-            
-            tr {
-                page-break-inside: avoid;
-                break-inside: avoid;
+        }
+
+        @page { 
+            size: A4;
+            margin: 0 0 2cm 0;
+
+            @bottom-center {
+                content: "Page " counter(page) " of " counter(pages);
+                font-family: Arial, Helvetica, sans-serif;
+                font-size: 9pt;
+                color: #666666;
+                width: 100%;
+                text-align: center;
+                padding-top: 1cm; 
             }
         }
         
         body {
             font-family: Arial, Helvetica, sans-serif;
-            font-size: 12px;
-            margin: 0;
-            padding: 20px;
+            font-size: 10pt;
             line-height: 1.4;
-            color: #000000;
+            color: #333333;
             background: #ffffff;
-            -webkit-print-color-adjust: exact;
-            color-adjust: exact;
-        }
-        
-        .company-header {
-            text-align: center;
-            margin-bottom: 25px;
-            padding: 20px;
-            background: #dc2626;
-            color: white;
-            border: 2px solid #dc2626;
-            page-break-inside: avoid;
-            -webkit-print-color-adjust: exact;
-            color-adjust: exact;
-        }
-        
-        .company-logo {
-            max-width: 120px;
-            max-height: 80px;
-            margin-bottom: 15px;
-            object-fit: contain;
-            background: white;
-            padding: 8px;
-            border: 2px solid white;
-        }
-        
-        .company-logo-fallback {
-            width: 120px;
-            height: 80px;
-            background: #dc2626;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 12px;
-            margin-bottom: 15px;
-            border: 2px solid white;
-        }
-        
-        .company-name {
-            font-size: 18px;
-            font-weight: bold;
-            color: white;
-            margin: 8px 0;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        
-        .company-tagline {
-            font-size: 12px;
-            color: white;
             margin: 0;
-            font-style: italic;
-            font-weight: normal;
+            padding: 0;
         }
-        
-        .company-date {
-            font-size: 10px;
+
+        .company-header {
+            display: flex;
+            align-items: center;
+            padding: 7px 1.5cm;
+            background: #dc2626; 
             color: white;
-            margin-top: 5px;
-            font-weight: normal;
+            border-bottom: 2px solid #b91c1c; 
+            page-break-inside: avoid;
         }
-        
+
+        .logo-container {
+            flex-shrink: 0;
+        }
+
+        .company-logo {
+            width: 60px; 
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: white;
+            padding: 2px;
+            border: 2px solid #b91c1c;
+        }
+
+        .company-details {
+            margin-left: auto;
+            text-align: right;
+        }
+
+        .company-name {
+            font-size: 14pt;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin: 0;
+        }
+
+        .company-tagline {
+            font-size: 9pt;
+            font-style: italic;
+            opacity: 0.9;
+            margin: 2px 0;
+        }
+
+        .company-date {
+            font-size: 8pt;
+            margin: 2px 0;
+        }
+
+        /* --- Document Header --- */
         .header {
             text-align: center;
             margin-bottom: 20px;
-            padding: 15px;
-            background: #ffffff;
-            border: 2px solid #007bff;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
             page-break-inside: avoid;
+            padding-left: 1.5cm;
+            padding-right: 1.5cm;
+            margin-top: 20px; 
         }
-        
         .header h1 {
-            font-size: 20px;
+            font-size: 18pt;
             font-weight: bold;
-            margin: 0 0 10px 0;
-            color: #007bff;
-            text-transform: uppercase;
+            color: #333333;
+            margin: 0;
         }
-        
         .header h2 {
-            font-size: 16px;
-            font-weight: bold;
-            margin: 0 0 8px 0;
-            color: #dc2626;
-        }
-        
-        .header h3 {
-            font-size: 12px;
+            font-size: 12pt;
             font-weight: normal;
-            margin: 3px 0;
-            color: #000000;
+            color: #555555;
+            margin: 5px 0;
         }
-        
+        .header h3 {
+            font-size: 10pt;
+            font-weight: normal;
+            color: #666666;
+            margin: 3px 0;
+        }
+
         table {
-            width: 100%;
+            width: calc(100% - 3cm); 
+            margin-left: 1.5cm;     
+            margin-right: 1.5cm;    
             border-collapse: collapse;
             margin-bottom: 20px;
-            background: white;
-            page-break-inside: auto;
         }
         
-        th {
-            background: #dc2626;
-            color: white;
-            font-weight: bold;
-            padding: 12px 8px;
-            text-align: center;
-            border: 1px solid #000000;
-            font-size: 11px;
-            text-transform: uppercase;
-            -webkit-print-color-adjust: exact;
-            color-adjust: exact;
-        }
-        
-        td {
-            padding: 8px 6px;
-            border: 1px solid #000000;
+        th, td {
+            padding: 8px;
             vertical-align: top;
-            font-size: 10px;
-            line-height: 1.3;
-            background: white;
+            text-align: left;
+            border: 1px solid #e0e0e0;
         }
 
-        /* Number Column - Left Aligned */
-        .number-col {
-            text-align: left !important;
+        thead th {
+            background: #f2f2f2; 
+            color: #333333;
             font-weight: bold;
-            color: #000000;
-            width: 60px;
-            min-width: 60px;
-        }
-
-        /* Section Row Styling */
-        .section-row td {
-            background: #f8f9fa;
-            font-weight: bold;
-            font-size: 11px;
-            color: #000000;
-            border: 1px solid #dee2e6;
-            padding: 10px 8px;
-            -webkit-print-color-adjust: exact;
-            color-adjust: exact;
-        }
-
-        /* Detail Row Styling - Simple and Clean */
-        .detail-row-1 td, .detail-row-2 td, .detail-row-3 td, .detail-row-4 td { 
-            background: #ffffff;
-            border: 1px solid #dee2e6;
-            font-weight: normal;
-        }
-
-        /* Currency Formatting */
-        .currency {
-            font-family: Arial, sans-serif;
-            font-weight: normal;
-            color: #000000;
-            text-align: right;
-        }
-        
-        .section-row {
-            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
-            font-weight: bold;
-            color: #1565c0;
-        }
-        
-        .section-row td {
-            padding: 10px 8px;
-            font-size: 11px;
-        }
-        
-        .detail-row-1 {
-            background-color: #f8f9fa;
-        }
-        
-        .detail-row-2 {
-            background-color: #ffffff;
-        }
-        
-        .detail-row-3 {
-            background-color: #f5f5f5;
-        }
-        
-        .detail-row-4 {
-            background-color: #ffffff;
-        }
-        
-        .total-row {
-            background: #007bff;
-            color: white;
-            font-weight: bold;
-            font-size: 12px;
-            -webkit-print-color-adjust: exact;
-            color-adjust: exact;
-        }
-        
-        .total-row td {
-            padding: 12px 8px;
+            font-size: 9pt;
             text-transform: uppercase;
-            border: 1px solid #000000;
-            background: #007bff;
-            color: white;
-            -webkit-print-color-adjust: exact;
-            color-adjust: exact;
+            padding-top: 12px;
+            padding-bottom: 12px;
+            border: 1px solid #cccccc;
+            border-bottom: 2px solid #dc2626; 
         }
-        
+
+        /* --- Row Specific Styles --- */
+        .section-row {
+            page-break-inside: avoid;
+        }
+        .section-row td {
+            background: #4a5568;
+            color: white;
+            font-weight: bold;
+            font-size: 11pt;
+            border: 1px solid #4a5568; 
+        }
+
+        .total-row td {
+            background: #2d3748;
+            color: white;
+            font-weight: bold;
+            font-size: 12pt;
+            text-transform: uppercase;
+            border: 1px solid #2d3748;
+            border-top: 3px double white;
+        }
+
+        /* --- Text Alignment & Formatting --- */
         .text-center { text-align: center; }
         .text-right { text-align: right; }
-        .text-left { text-align: left; }
         
-        .indent-1 { padding-left: 15px; }
-        .indent-2 { padding-left: 25px; }
-        .indent-3 { padding-left: 35px; }
-        .indent-4 { padding-left: 45px; }
-        
-        /* Number column styling */
-        .number-col {
-            font-weight: 600;
-            color: #495057;
-            min-width: 60px;
-        }
-        
-        /* Amount styling */
-        .amount {
-            font-weight: 600;
-            color: #28a745;
-        }
-        
-        /* Currency styling */
         .currency {
-            font-family: 'Courier New', monospace;
-            font-weight: 500;
+            font-family: 'Consolas', 'Courier New', monospace;
         }
+
+        /* REVISI: CSS Indentasi ini sudah benar, JANGAN diubah */
+        .indent-1 { padding-left: 20px; }
+        .indent-2 { padding-left: 35px; }
+        .indent-3 { padding-left: 50px; }
+        .indent-4 { padding-left: 65px; }
+
+        .no-col { width: 5%; }
+        .desc-col { width: 35%; }
+        .note-col { width: 15%; }
+        .qty-col { width: 8%; text-align: center; }
+        .unit-col { width: 7%; text-align: center; }
+        .price-col { width: 15%; text-align: right; }
+        .total-col { width: 15%; text-align: right; }
+        
     </style>
     <script>
-        // Auto-open print dialog when page loads
         window.onload = function() {
-            setTimeout(function() {
-                window.print();
-            }, 500);
+            setTimeout(function() { window.print(); }, 500);
         }
     </script>
 </head>
 <body>
-
     
-    <!-- Company Header -->
     <div class="company-header">
-        <img src="{{ asset('image/pertamina_logo.jpg') }}" alt="Pertamina Logo" class="company-logo" 
-             onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-flex';">
-        <div class="company-logo-fallback" style="display: none;">PERTAMINA</div>
-        <div class="company-name">PT PERTAMINA MAINTENANCE AND CONSTRUCTION</div>
-        <div class="company-tagline">Excellence in Maintenance & Construction Services</div>
-        <div class="company-date">
-            Generated on: {{ date('d F Y, H:i') }} WIB
+        <div class="logo-container">
+            <img src="{{ asset('image/pertamina_logo.jpg') }}" alt="Pertamina Logo" class="company-logo">
+        </div>
+        <div class="company-details">
+            <div class="company-name">PT PERTAMINA MAINTENANCE AND CONSTRUCTION</div>
+            <div class="company-tagline">Excellence in Maintenance & Construction Services</div>
+            <div class="company-date">
+                Generated on: {{ \Carbon\Carbon::now('Asia/Jakarta')->format('d F Y, H:i') }} WIB
+            </div>
         </div>
     </div>
     
@@ -313,28 +218,23 @@
     <table>
         <thead>
             <tr>
-                                        <th style="text-align: left;">No</th>
-                <th style="width: 35%;">Description</th>
-                <th style="width: 15%;">Note</th>
-                <th style="width: 10%;">Quantity</th>
-                <th style="width: 8%;">Unit</th>
-                <th style="width: 12%;">Harga Satuan</th>
-                <th style="width: 10%;">Total Biaya</th>
+                <th class="no-col">No</th>
+                <th class="desc-col">Description</th>
+                <th class="note-col">Note</th>
+                <th class="qty-col">Quantity</th>
+                <th class="unit-col">Unit</th>
+                <th class="price-col">Price/Unit</th>
+                <th class="total-col">Total Cost</th>
             </tr>
         </thead>
         <tbody>
             @foreach($sections as $sectionIndex => $section)
                 @php $sectionNumber = $sectionIndex + 1; @endphp
                 
-                <!-- Section Row -->
                 <tr class="section-row">
-                    <td class="text-left number-col">{{ $sectionNumber }}</td>
-                    <td style="font-weight: bold; font-size: 12px;">{{ $section->nama }}</td>
-                    <td>{{ $section->note ?? '' }}</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td class="text-right amount currency">{{ $section->formatted_total_harga ?? 'Rp 0' }}</td>
+                    <td>{{ $sectionNumber }}</td>
+                    <td colspan="5">{{ $section->nama }}</td>
+                    <td class="text-right currency">{{ $section->formatted_total_harga ?? 'Rp 0' }}</td>
                 </tr>
 
                 @if($section->details && $section->details->count() > 0)
@@ -390,21 +290,19 @@
                 @endif
             @endforeach
             
-            <!-- Total Row -->
             <tr class="total-row">
-                <td colspan="6" class="text-center">TOTAL BOQ</td>
-                <td class="text-right">{{ $boq->formatted_total_harga ?? 'Rp 0' }}</td>
+                <td colspan="6" class="text-center">GRAND TOTAL</td>
+                <td class="text-right currency">{{ $boq->formatted_total_harga ?? 'Rp 0' }}</td>
             </tr>
         </tbody>
     </table>
 
-    <!-- Print Button at Bottom -->
-    <div class="no-print" style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 2px solid #dee2e6;">
+    <div class="no-print" style="text-align: center; margin: 30px 1.5cm;">
         <button onclick="window.print()" style="background: #007bff; color: white; border: none; padding: 12px 24px; border-radius: 5px; cursor: pointer; font-size: 14px; font-weight: bold; margin-right: 10px;">
             🖨️ Print to PDF
         </button>
         <button onclick="window.close()" style="background: #6c757d; color: white; border: none; padding: 12px 24px; border-radius: 5px; cursor: pointer; font-size: 14px; font-weight: bold;">
-            ❌ Close
+            Close
         </button>
     </div>
 </body>

@@ -41,8 +41,8 @@
         <td style="border:1px solid #ffffff;text-align:center;width:15%;padding:12px;">Note</td>
         <td style="border:1px solid #ffffff;text-align:center;width:10%;padding:12px;">Quantity</td>
         <td style="border:1px solid #ffffff;text-align:center;width:8%;padding:12px;">Unit</td>
-        <td style="border:1px solid #ffffff;text-align:center;width:12%;padding:12px;">Harga Satuan</td>
-        <td style="border:1px solid #ffffff;text-align:center;width:10%;padding:12px;">Total Biaya</td>
+        <td style="border:1px solid #ffffff;text-align:center;width:12%;padding:12px;">Price/Unit</td>
+        <td style="border:1px solid #ffffff;text-align:center;width:10%;padding:12px;">Total Cost</td>
     </tr>
 
     @foreach($sections as $sectionIndex => $section)

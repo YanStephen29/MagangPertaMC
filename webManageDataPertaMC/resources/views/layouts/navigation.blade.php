@@ -85,6 +85,27 @@
                     </button>
                 @endcanAccess
                 
+                <!-- Hold Requests - Only for Admins -->
+                @canAccess('hold_request_read')
+                    @if(in_array(auth('admin')->user()->role, ['Super Admin', 'Admin', 'Project Manager']))
+                        @php
+                            $holdCount = \App\Models\Request::where('status_req', 'hold')->count();
+                        @endphp
+                        <a href="{{ route('hold-requests.index') }}" 
+                           class="text-white hover:text-red-100 px-2 sm:px-3 py-1 text-xs sm:text-sm font-semibold transition-all duration-500 ease-out border-b-2 {{ request()->routeIs('hold-requests.*') ? 'border-white bg-red-700/80 shadow-lg scale-105' : 'border-transparent hover:border-red-200 hover:bg-red-700/30 hover:scale-105 hover:shadow-md' }} rounded-t-lg relative overflow-hidden group">
+                            <span class="relative z-10 flex items-center">
+                                Hold Requests
+                                @if($holdCount > 0)
+                                    <span class="ml-1 bg-yellow-400 text-yellow-900 text-xs font-bold px-2 py-0.5 rounded-full animate-pulse">
+                                        {{ $holdCount }}
+                                    </span>
+                                @endif
+                            </span>
+                            <div class="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-out"></div>
+                        </a>
+                    @endif
+                @endcanAccess
+
                 <!-- Account Dropdown -->
                 <div class="relative">
                     <div x-data="{ accountOpen: false }" class="relative">
@@ -112,7 +133,7 @@
                              class="absolute right-0 mt-2 w-56 rounded-xl shadow-2xl bg-white/95 backdrop-blur-md ring-1 ring-black/10 z-[99998] border border-gray-200/50">
                             <div class="py-1">
                                 <!-- Enhanced Admin Info -->
-                                <div class="px-4 py-3 border-b border-gray-200/50 bg-gradient-to-r from-gray-50 to-gray-100/50 backdrop-blur-sm">
+                                <div class="px-4 py-3 border-b border-gray-200/50 rounded-xl bg-gradient-to-r from-gray-50 to-gray-100/50 backdrop-blur-sm">
                                     <div class="flex items-center">
                                         <div class="flex-shrink-0 h-8 w-8">
                                             <div class="h-8 w-8 rounded-full flex items-center justify-center text-white font-bold text-xs shadow-lg transition-transform duration-300 hover:scale-110" style="background: linear-gradient(135deg, {{ auth('admin')->user()->getRoleColor() }}, {{ auth('admin')->user()->getRoleColor() }}cc);">
@@ -137,13 +158,8 @@
                                         </svg>
                                         Create Account
                                     </a>
-                                @else
-                                    <button class="@privilegeButton('account_create', 'membuat account baru') block w-full text-left px-4 py-2 text-sm text-gray-400 cursor-not-allowed">
-                                        <i class="fas fa-lock w-4 h-4 mr-2 inline opacity-50"></i>
-                                        Create Account <span class="text-xs">(No Access)</span>
-                                    </button>
                                 @endcanAccess
-
+                                
                                 <!-- Manage Account Menu -->
                                 @canAccess('account_update')
                                     <a href="{{ route('admin.management.index') }}" 
@@ -154,11 +170,6 @@
                                         </svg>
                                         Manage Account
                                     </a>
-                                @else
-                                    <button class="@privilegeButton('account_update', 'mengelola account') block w-full text-left px-4 py-2 text-sm text-gray-400 cursor-not-allowed">
-                                        <i class="fas fa-lock w-4 h-4 mr-2 inline opacity-50"></i>
-                                        Manage Account <span class="text-xs">(No Access)</span>
-                                    </button>
                                 @endcanAccess
 
                                 <div class="border-t border-gray-200 my-1"></div>
@@ -203,14 +214,10 @@
          class="hidden sm:hidden bg-gradient-to-b from-red-700 to-red-800 relative z-[99998] shadow-xl backdrop-blur-sm">
         <div class="pt-2 pb-3 space-y-1 border-t border-red-500/50 px-2">
             @canAccess('project_read')
-                <a href="{{ route('home') }}" 
-                   class="block px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('home', 'projects.*') ? 'text-white bg-red-800' : 'text-red-100 hover:text-white hover:bg-red-800' }} transition-colors duration-200">
+                <a href="{{ route('projects.index') }}" 
+                   class="block px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('projects.*') ? 'text-white bg-red-800' : 'text-red-100 hover:text-white hover:bg-red-800' }} transition-colors duration-200">
                     🏠 Home
                 </a>
-            @else
-                <button class="@privilegeButton('project_read', 'mengakses halaman home/project') block w-full text-left px-3 py-2 text-sm font-medium rounded-md text-red-200 opacity-50 cursor-not-allowed">
-                    <i class="fas fa-lock mr-1"></i> 🏠 Home (No Access)
-                </button>
             @endcanAccess
             
             @canAccess('document_read')
@@ -218,10 +225,6 @@
                    class="block px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('documents.*') ? 'text-white bg-red-800' : 'text-red-100 hover:text-white hover:bg-red-800' }} transition-colors duration-200">
                     📄 Documents
                 </a>
-            @else
-                <button class="@privilegeButton('document_read', 'mengakses halaman documents') block w-full text-left px-3 py-2 text-sm font-medium rounded-md text-red-200 opacity-50 cursor-not-allowed">
-                    <i class="fas fa-lock mr-1"></i> 📄 Documents (No Access)
-                </button>
             @endcanAccess
             
             @canAccess('bidang_read')
@@ -229,10 +232,24 @@
                    class="block px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('bidangs.*') ? 'text-white bg-red-800' : 'text-red-100 hover:text-white hover:bg-red-800' }} transition-colors duration-200">
                     📊 Kode Bidang
                 </a>
-            @else
-                <button class="@privilegeButton('bidang_read', 'mengakses halaman kode bidang') block w-full text-left px-3 py-2 text-sm font-medium rounded-md text-red-200 opacity-50 cursor-not-allowed">
-                    <i class="fas fa-lock mr-1"></i> 📊 Kode Bidang (No Access)
-                </button>
+            @endcanAccess
+            
+            <!-- Hold Requests - Mobile Menu -->
+            @canAccess('hold_request_read')
+                @if(in_array(auth('admin')->user()->role, ['Super Admin', 'Admin', 'Project Manager']))
+                    @php
+                        $holdCount = \App\Models\Request::where('status_req', 'hold')->count();
+                    @endphp
+                    <a href="{{ route('hold-requests.index') }}" 
+                       class="block px-3 py-2 text-sm font-medium rounded-md {{ request()->routeIs('hold-requests.*') ? 'text-white bg-red-800' : 'text-red-100 hover:text-white hover:bg-red-800' }} transition-colors duration-200">
+                        🔒 Hold Requests
+                        @if($holdCount > 0)
+                            <span class="ml-2 bg-yellow-400 text-yellow-900 text-xs font-bold px-2 py-0.5 rounded-full">
+                                {{ $holdCount }}
+                            </span>
+                        @endif
+                    </a>
+                @endif
             @endcanAccess
         </div>
         
@@ -264,11 +281,6 @@
                         </svg>
                         ➕ Create Account
                     </a>
-                @else
-                    <button class="@privilegeButton('account_create', 'membuat account baru') block w-full text-left px-3 py-2 text-sm text-red-200 opacity-50 cursor-not-allowed">
-                        <i class="fas fa-lock w-4 h-4 mr-2 inline opacity-50"></i>
-                        ➕ Create Account (No Access)
-                    </button>
                 @endcanAccess
 
                 <!-- Manage Account Menu -->
@@ -280,11 +292,6 @@
                         </svg>
                         👥 Manage Account
                     </a>
-                @else
-                    <button class="@privilegeButton('account_update', 'mengelola account') block w-full text-left px-3 py-2 text-sm text-red-200 opacity-50 cursor-not-allowed">
-                        <i class="fas fa-lock w-4 h-4 mr-2 inline opacity-50"></i>
-                        👥 Manage Account (No Access)
-                    </button>
                 @endcanAccess
 
                 <form method="POST" action="{{ route('admin.logout') }}">

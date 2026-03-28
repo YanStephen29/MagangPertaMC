@@ -50,8 +50,8 @@ class Tahapan extends Model
     {
         return match($this->namaTahapan) {
             self::TAHAPAN_BELUM_DIPROSES => 0,
-            self::TAHAPAN_PROJECT_TO_EPC => 25,
-            self::TAHAPAN_PMO_TO_EPC => 50,
+            self::TAHAPAN_PROJECT_TO_EPC => 33.33,
+            self::TAHAPAN_PMO_TO_EPC => 66.66,
             self::TAHAPAN_EPC_TO_PROCUREMENT => 100,
             default => 0
         };

@@ -27,37 +27,9 @@
 
     <!-- Upload Form -->
     <div class="bg-white rounded-lg shadow-md p-6">
-        @if(session('success'))
-            <div class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-6">
-                <div class="flex items-center">
-                    <i class="fas fa-check-circle mr-2"></i>
-                    {{ session('success') }}
-                </div>
-            </div>
-        @endif
 
-        @if(session('error'))
-            <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
-                <div class="flex items-center">
-                    <i class="fas fa-exclamation-circle mr-2"></i>
-                    {{ session('error') }}
-                </div>
-            </div>
-        @endif
 
-        @if($errors->any())
-            <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
-                <div class="flex items-center mb-2">
-                    <i class="fas fa-exclamation-triangle mr-2"></i>
-                    <strong>Upload Error:</strong>
-                </div>
-                <ul class="list-disc list-inside ml-4">
-                    @foreach($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
+        <!-- Notifikasi sudah ditangani di layout utama (app.blade.php) -->
 
         <form action="{{ route('projects.boq.upload.process', [$project, $boq]) }}" 
               method="POST" 
@@ -77,10 +49,10 @@
                             <p class="mb-2 text-sm text-gray-500">
                                 <span class="font-semibold">Click to upload</span> Excel file
                             </p>
-                            <p class="text-xs text-gray-500">XLSX or XLS (Max 10MB)</p>
+                            <p class="text-xs text-gray-500">XLSX , XLSM or XLS (Max 10MB)</p>
                         </div>
                         <input id="excel_file" name="excel_file" type="file" class="hidden" 
-                               accept=".xlsx,.xls" required>
+                               accept=".xlsx,.xls,.xlsm" required>
                     </label>
                 </div>
                 <div id="file-name" class="mt-2 text-sm text-gray-600 hidden"></div>

@@ -15,16 +15,13 @@ class ProjectController extends Controller
         try {
             $admin = Auth::guard('admin')->user();
             
-            // Always render the view, but show empty data if no read access
-            if (!$admin->canRead('project')) {
-                $projects = collect(); // Empty collection
-                return view('projects.index', compact('projects', 'admin'));
-            }
-            
             $query = Project::with(['admin', 'assignedTo', 'tools', 'boq.sections.details']);
 
-            // Apply access control - PM hanya bisa lihat project yang di-assign
-            $query->accessibleBy($admin);
+            // Filter berdasarkan role: PM hanya bisa melihat project yang di-assign ke dia
+            if ($admin->role === 'Project Manager') {
+                $query->where('assigned_to', $admin->admin_id);
+            }
+            // Admin bisa melihat semua project
 
             // Search functionality
             if ($request->filled('search')) {
@@ -69,7 +66,7 @@ class ProjectController extends Controller
             // Return empty collection as fallback
             $projects = collect();
             $admin = Auth::guard('admin')->user();
-            return view('projects.index', compact('projects', 'admin'))->with('error', 'Terjadi kesalahan saat memuat data.');
+            return view('projects.index', compact('projects', 'admin'))->with('error', 'An error occurred while loading data.');
         }
     }
 
@@ -78,7 +75,7 @@ class ProjectController extends Controller
         $admin = Auth::guard('admin')->user();
         if (!$admin->canCreate('project')) {
             return redirect()->route('projects.index')
-                           ->with('error', 'Anda tidak memiliki akses untuk membuat project. Hubungi admin untuk mendapatkan akses.');
+                           ->with('error', 'You do not have access to create projects. Contact admin for access.');
         }
         
         return view('projects.create');
@@ -89,7 +86,7 @@ class ProjectController extends Controller
         $admin = Auth::guard('admin')->user();
         if (!$admin->canCreate('project')) {
             return redirect()->route('projects.index')
-                           ->with('error', 'Anda tidak memiliki akses untuk membuat project. Hubungi admin untuk mendapatkan akses.');
+                           ->with('error', 'You do not have access to create projects. Contact admin for access.');
         }
         
         $request->validate([
@@ -123,7 +120,13 @@ class ProjectController extends Controller
         $admin = Auth::guard('admin')->user();
         if (!$admin->canUpdate('project')) {
             return redirect()->route('projects.index')
-                           ->with('error', 'Anda tidak memiliki akses untuk mengedit project. Hubungi admin untuk mendapatkan akses.');
+                           ->with('error', 'You do not have access to edit projects. Contact admin for access.');
+        }
+        
+        // Check if admin can manage this specific project
+        if (!$project->canBeManaged($admin)) {
+            return redirect()->route('projects.index')
+                           ->with('error', 'This project is not assigned to you. You can only edit projects that are assigned to you.');
         }
         
         return view('projects.edit', compact('project'));
@@ -131,6 +134,14 @@ class ProjectController extends Controller
 
     public function update(Request $request, Project $project)
     {
+        $admin = Auth::guard('admin')->user();
+        
+        // Check if admin can manage this specific project
+        if (!$project->canBeManaged($admin)) {
+            return redirect()->route('projects.index')
+                           ->with('error', 'This project is not assigned to you. You can only edit projects that are assigned to you.');
+        }
+        
         $request->validate([
             'no_IO' => 'required|string|max:10|unique:projects,no_IO,' . $project->no_IO . ',no_IO',
             'title_project' => 'required|string|max:100',
@@ -143,6 +154,14 @@ class ProjectController extends Controller
 
     public function destroy(Project $project)
     {
+        $admin = Auth::guard('admin')->user();
+        
+        // Check if admin can manage this specific project
+        if (!$project->canBeManaged($admin)) {
+            return redirect()->route('projects.index')
+                           ->with('error', 'This project is not assigned to you. You can only delete projects that are assigned to you.');
+        }
+        
         $project->delete();
         return redirect()->route('projects.index')->with('success', 'Project berhasil dihapus!');
     }

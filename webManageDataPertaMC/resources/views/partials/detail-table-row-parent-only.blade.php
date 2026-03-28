@@ -62,13 +62,24 @@
     </td>
     <td class="px-6 py-3 whitespace-nowrap text-center text-sm font-medium">
         <div class="flex items-center justify-center space-x-2">
-            <a href="{{ route('sections.details.edit', [$project, $detail->section, $detail]) }}" 
-               class="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded text-xs inline-flex items-center transition-colors">
-                <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-                </svg>
-                Edit
-            </a>
+            @if($detail->canBeEdited(auth()->guard('admin')->user()))
+                <a href="{{ route('sections.details.edit', [$project, $detail->section, $detail]) }}" 
+                   class="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded text-xs inline-flex items-center transition-colors">
+                    <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+                    </svg>
+                    Edit
+                </a>
+            @else
+                <button class="bg-gray-400 text-white px-2 py-1 rounded text-xs inline-flex items-center cursor-not-allowed" 
+                        title="{{ $detail->section->boq->status === 'Locked' ? 'BOQ sudah di-lock, tidak bisa edit detail' : 'Tidak ada akses untuk edit detail' }}"
+                        disabled>
+                    <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                    </svg>
+                    Edit
+                </button>
+            @endif
             <a href="{{ route('sections.details.index', [$project, $detail->section]) }}" 
                class="bg-purple-500 hover:bg-purple-600 text-white px-2 py-1 rounded text-xs inline-flex items-center transition-colors">
                 <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">

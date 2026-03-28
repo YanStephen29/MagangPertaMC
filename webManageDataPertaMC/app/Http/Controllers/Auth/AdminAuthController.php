@@ -45,6 +45,18 @@ class AdminAuthController extends Controller
     }
 
     /**
+     * Handle GET logout requests (fallback)
+     */
+    public function logoutGet(Request $request)
+    {
+        // If someone tries to access logout via GET, perform the logout anyway
+        Auth::guard('admin')->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect()->route('splash')->with('info', 'Anda telah berhasil logout.');
+    }
+
+    /**
      * Show admin dashboard
      */
     public function dashboard()

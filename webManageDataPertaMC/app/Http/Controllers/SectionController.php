@@ -23,13 +23,23 @@ class SectionController extends Controller
         $admin = Auth::guard('admin')->user();
         
         // Check if PM has access to this project
-        if ($admin->role === 'Project Manager' && $project->assigned_to !== $admin->username) {
-            return redirect()->route('projects.index')->with('error', 'Access denied to this project.');
+        if ($admin->role === 'Project Manager' && $project->assigned_to !== $admin->admin_id) {
+            return redirect()->route('projects.index')->with('error', 'This project is not assigned to you. You can only access BOQ for projects that are assigned to you.');
         }
         
         // Verify BOQ belongs to this project
         if ($boq->project_no_io !== $project->no_IO) {
             return redirect()->route('projects.boq.index', $project)->with('error', 'BOQ not found for this project.');
+        }
+        
+        // Check if PM can manage BOQ for this project
+        if (!$admin->canManageBoq($project)) {
+            return redirect()->route('projects.boq.index', $project)->with('error', 'Cannot create section. BOQ is locked.');
+        }
+        
+        // Check if BOQ is locked
+        if ($boq->status === 'Locked') {
+            return redirect()->route('projects.boq.index', $project)->with('error', 'Cannot create section. BOQ is locked.');
         }
         
         // Get next section ID
@@ -46,13 +56,23 @@ class SectionController extends Controller
         $admin = Auth::guard('admin')->user();
         
         // Check if PM has access to this project
-        if ($admin->role === 'Project Manager' && $project->assigned_to !== $admin->username) {
-            return redirect()->route('projects.index')->with('error', 'Access denied to this project.');
+        if ($admin->role === 'Project Manager' && $project->assigned_to !== $admin->admin_id) {
+            return redirect()->route('projects.index')->with('error', 'This project is not assigned to you. You can only access BOQ for projects that are assigned to you.');
         }
         
         // Verify BOQ belongs to this project
         if ($boq->project_no_io !== $project->no_IO) {
             return redirect()->route('projects.boq.index', $project)->with('error', 'BOQ not found for this project.');
+        }
+        
+        // Check if PM can manage BOQ for this project
+        if (!$admin->canManageBoq($project)) {
+            return redirect()->route('projects.boq.index', $project)->with('error', 'Cannot create section. BOQ is locked.');
+        }
+        
+        // Check if BOQ is locked
+        if ($boq->status === 'Locked') {
+            return redirect()->route('projects.boq.index', $project)->with('error', 'Cannot create section. BOQ is locked.');
         }
         
         $validated = $request->validate([
@@ -65,6 +85,9 @@ class SectionController extends Controller
         
         $section = Section::create($validated);
         
+        // Update BOQ status to Open when first section is created
+        $boq->updateStatusToOpen();
+        
         return redirect()->route('projects.boq.index', $project)->with('success', 'Section created successfully.');
     }
 
@@ -76,8 +99,8 @@ class SectionController extends Controller
         $admin = Auth::guard('admin')->user();
         
         // Check if PM has access to this project
-        if ($admin->role === 'Project Manager' && $project->assigned_to !== $admin->username) {
-            return redirect()->route('projects.index')->with('error', 'Access denied to this project.');
+        if ($admin->role === 'Project Manager' && $project->assigned_to !== $admin->admin_id) {
+            return redirect()->route('projects.index')->with('error', 'This project is not assigned to you. You can only access BOQ for projects that are assigned to you.');
         }
         
         // Verify section belongs to this BOQ
@@ -95,9 +118,9 @@ class SectionController extends Controller
     {
         $admin = Auth::guard('admin')->user();
         
-        // Check if PM has access to this project
-        if ($admin->role === 'Project Manager' && $project->assigned_to !== $admin->username) {
-            return redirect()->route('projects.index')->with('error', 'Access denied to this project.');
+        // Check if section can be edited (considering lock status)
+        if (!$section->canBeEdited($admin)) {
+            return redirect()->route('projects.boq.index', $project)->with('error', 'This BOQ is already locked or you do not have access to edit this section.');
         }
         
         // Verify section belongs to this BOQ
@@ -121,9 +144,9 @@ class SectionController extends Controller
     {
         $admin = Auth::guard('admin')->user();
         
-        // Check if PM has access to this project
-        if ($admin->role === 'Project Manager' && $project->assigned_to !== $admin->username) {
-            return redirect()->route('projects.index')->with('error', 'Access denied to this project.');
+        // Check if section can be deleted (considering lock status)
+        if (!$section->canBeDeleted($admin)) {
+            return redirect()->route('projects.boq.index', $project)->with('error', 'This BOQ is already locked or you do not have access to delete this section.');
         }
         
         // Verify section belongs to this BOQ

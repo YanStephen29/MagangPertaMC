@@ -16,8 +16,7 @@ class Request extends Model
         'jenis_req', 
         'no_surat',
         'date_req',
-        'status_req',
-        'tool_id'
+        'status_req'
     ];
 
     protected $casts = [
@@ -38,14 +37,35 @@ class Request extends Model
     ];
 
     public const STATUS_REQ_OPTIONS = [
-        'Closed',
-        'On Proses'
+        'Pending',
+        'On Process',
+        'Closed'
     ];
 
-    // Relationship with Tool (many-to-one) 
+    // Relationship with Tools (one-to-many) 
+    public function tools()
+    {
+        return $this->hasMany(Tool::class, 'request_id', 'id_req');
+    }
+
+    // Helper method for backward compatibility - returns first tool
     public function tool()
     {
-        return $this->belongsTo(Tool::class, 'tool_id', 'idTools');
+        return $this->tools()->first();
+    }
+
+    // Relationship with RequestDetails (one-to-many)
+    public function requestDetails()
+    {
+        return $this->hasMany(\App\Models\RequestDetail::class, 'request_id', 'id_req');
+    }
+
+    // Relationship with Details through RequestDetail (many-to-many)
+    public function details()
+    {
+        return $this->belongsToMany(Detail::class, 'request_details', 'request_id', 'detail_id', 'id_req', 'no')
+                    ->withPivot('requested_quantity', 'unit_price', 'total_price', 'status', 'notes')
+                    ->withTimestamps();
     }
 
 
@@ -54,9 +74,23 @@ class Request extends Model
     public function getStatusColor()
     {
         return match($this->status_req) {
+            'Pending' => 'yellow',
+            'On Process' => 'blue',
             'Closed' => 'green',
-            'On Proses' => 'yellow',
             default => 'gray'
+        };
+    }
+    
+    /**
+     * Get display text for status with proper formatting
+     */
+    public function getStatusDisplay()
+    {
+        return match($this->status_req) {
+            'Pending' => 'Pending',
+            'On Process' => 'On Process',
+            'Closed' => 'Closed',
+            default => $this->status_req
         };
     }
 

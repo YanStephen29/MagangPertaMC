@@ -6,7 +6,7 @@
                     <svg class="w-7 h-7 mr-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"></path>
                     </svg>
-                    Kelola Detail Section
+                    Manage Detail Section
                 </h2>
                 <div class="mt-2 flex flex-col sm:flex-row sm:items-center gap-2 text-sm text-gray-600">
                     <span class="flex items-center">
@@ -43,7 +43,7 @@
                     <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
                     </svg>
-                    <span>Kembali ke BOQ</span>
+                    <span>Back to BOQ</span>
                 </a>
             </div>
         </div>
@@ -84,7 +84,7 @@
                 <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl shadow-lg p-6 border border-purple-200 hover:shadow-xl transition-all duration-300">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-sm text-purple-700 font-semibold mb-1">Root Details</p>
+                            <p class="text-sm text-purple-700 font-semibold mb-1">Sections Details</p>
                             <p class="text-3xl font-bold text-purple-900">{{ $details->count() }}</p>
                         </div>
                         <div class="bg-purple-500 rounded-full p-4 shadow-md">
@@ -98,7 +98,7 @@
                 <div class="bg-gradient-to-br from-amber-50 to-amber-100 rounded-xl shadow-lg p-6 border border-amber-200 hover:shadow-xl transition-all duration-300">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-sm text-amber-700 font-semibold mb-1">Section Value</p>
+                            <p class="text-sm text-amber-700 font-semibold mb-1">Total Budget</p>
                             <p class="text-2xl font-bold text-amber-900">{{ $section->formatted_total_harga }}</p>
                         </div>
                         <div class="bg-amber-500 rounded-full p-4 shadow-md">
@@ -127,7 +127,7 @@
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                                 </svg>
-                                Tambah Detail
+                                Add Detail
                             </a>
                             <button onclick="expandAll()" class="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-4 py-2.5 rounded-lg text-sm font-semibold inline-flex items-center transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-105">
                                 <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -153,8 +153,8 @@
                                         <th class="px-6 py-3 text-left text-xs font-bold text-red-700 uppercase tracking-wider border-r border-gray-200">Note</th>
                                         <th class="px-6 py-3 text-right text-xs font-bold text-red-700 uppercase tracking-wider border-r border-gray-200">Quantity</th>
                                         <th class="px-6 py-3 text-center text-xs font-bold text-red-700 uppercase tracking-wider border-r border-gray-200">Unit</th>
-                                        <th class="px-6 py-3 text-right text-xs font-bold text-red-700 uppercase tracking-wider border-r border-gray-200">Harga Satuan</th>
-                                        <th class="px-6 py-3 text-right text-xs font-bold text-red-700 uppercase tracking-wider border-r border-gray-200">Total Biaya</th>
+                                        <th class="px-6 py-3 text-right text-xs font-bold text-red-700 uppercase tracking-wider border-r border-gray-200">Unit/Price</th>
+                                        <th class="px-6 py-3 text-right text-xs font-bold text-red-700 uppercase tracking-wider border-r border-gray-200">Total Cost</th>
                                         <th class="px-6 py-3 text-center text-xs font-bold text-red-700 uppercase tracking-wider">Actions</th>
                                     </tr>
                                 </thead>
